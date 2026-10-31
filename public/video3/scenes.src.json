@@ -1,0 +1,253 @@
+{
+  "style": "explainer",
+  "brand": "NamaBrandSaya",
+  "tag": "Mindset Jualan",
+  "accent": "#ff5a1f",
+  "char": "girl",
+  "charColor": "#222222",
+  "cta": "Link-nya di bio",
+  "scenes": [
+    {
+      "start": 0,
+      "title": "Kebanyakan orang *salah* mengira",
+      "small": 2,
+      "stage": [
+        {
+          "type": "chip",
+          "title": "Mindset",
+          "icon": "💡",
+          "tone": "#ff5a1f"
+        }
+      ]
+    },
+    {
+      "start": 2,
+      "title": "kalau *jualan* itu soal bicara,",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img01.png",
+          "at": "jualan",
+          "h": 700,
+          "caption": "Metafora salah mengira"
+        }
+      ],
+      "small": 0,
+      "step": "1/4"
+    },
+    {
+      "start": 4.4,
+      "title": "padahal sebenarnya ini soal *mendengar.*",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img02.png",
+          "h": 700,
+          "caption": "Soal mendengar"
+        }
+      ],
+      "small": 0,
+      "step": "1/4"
+    },
+    {
+      "start": 8.4,
+      "title": "Coba lihat *sekelilingmu* dengan tengang,",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img03.png",
+          "at": "sekelilingmu",
+          "h": 700,
+          "caption": "Melihat sekeliling"
+        }
+      ],
+      "small": 0,
+      "step": "1/4"
+    },
+    {
+      "start": 10.5,
+      "title": "tatap *layar* ponselmu seolah itu jendela,",
+      "step": "1/4",
+      "stage": [
+        {
+          "type": "phone",
+          "title": "Perspektif",
+          "rows": [
+            {
+              "from": "bot",
+              "text": "Ini adalah jendela dunia."
+            }
+          ]
+        }
+      ],
+      "small": 0
+    },
+    {
+      "start": 13.4,
+      "title": "*bukan* dinding yang menghalangi.",
+      "step": "1/4",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img04.png",
+          "at": "bukan",
+          "h": 700,
+          "caption": "Jendela vs Dinding"
+        }
+      ],
+      "small": 0
+    },
+    {
+      "start": 15.9,
+      "title": "Nah, tawarkan *solusi* kecil untuk satu orang saja,",
+      "step": "2/4",
+      "stage": [
+        {
+          "type": "dialog",
+          "title": "Tawaran",
+          "text": "Bisa saya bantu masalah Anda?",
+          "buttons": [
+            "Bantu",
+            "Nanti"
+          ],
+          "sub": ""
+        }
+      ],
+      "small": 0
+    },
+    {
+      "start": 19.4,
+      "title": "bukan sekedar *teriakan* di tengah keramaian.",
+      "step": "2/4",
+      "stage": [
+        {
+          "type": "bars",
+          "title": "Volume Suara",
+          "bars": [
+            {
+              "label": "Publik",
+              "value": 90
+            },
+            {
+              "label": "Personal",
+              "value": 30
+            },
+            {
+              "label": "3",
+              "value": 70
+            }
+          ],
+          "hi": 1
+        }
+      ],
+      "small": 0
+    },
+    {
+      "start": 22.9,
+      "title": "Biarkan *penolakan* mengalir seperti air hujan,",
+      "step": "3/4",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img05.png",
+          "at": "penolakan",
+          "h": 700,
+          "caption": "Metafora air hujan"
+        }
+      ],
+      "small": 0
+    },
+    {
+      "start": 25.6,
+      "title": "mendinginkan *tanpa* merusak.",
+      "step": "3/4",
+      "stage": [
+        {
+          "type": "meter",
+          "title": "Temperatur Hati",
+          "pct": 20,
+          "label": "Tetap Tenang"
+        }
+      ],
+      "small": 0
+    },
+    {
+      "start": 27.8,
+      "title": "Kamu akan sadar kalau *keberanian* itu",
+      "step": "4/4",
+      "stage": [
+        {
+          "type": "kpi",
+          "title": "Level Mental",
+          "icon": "🛡️",
+          "value": "Keberanian",
+          "pct": 100,
+          "big": true
+        }
+      ],
+      "small": 0
+    },
+    {
+      "start": 30.6,
+      "title": "bukan berarti tanpa rasa *takut.*",
+      "step": "4/4",
+      "stage": [
+        {
+          "type": "chip",
+          "title": "Kelola Takut",
+          "icon": "✨",
+          "tone": "#3b6fd8"
+        }
+      ],
+      "small": 0
+    },
+    {
+      "start": 33.4,
+      "title": "Jadi, simpan *pesan* ini sebagai pengingat",
+      "stage": [
+        {
+          "type": "files",
+          "title": "Penyimpanan",
+          "groups": [
+            "Motivasi",
+            "Pesan"
+          ]
+        }
+      ],
+      "small": 0,
+      "step": "4/4"
+    },
+    {
+      "start": 36.2,
+      "title": "saat rasa ragu kembali *mengetuk* pintu hatimu.",
+      "stage": [
+        {
+          "type": "profile",
+          "title": "@NamaBrandSaya",
+          "sub": "Belajar mindset jualan setiap hari",
+          "cta": "Simpan Video"
+        }
+      ],
+      "small": 0
+    }
+  ],
+  "header": false,
+  "charStyle": "block",
+  "transitions": [
+    "fade"
+  ],
+  "transitionsMode": "cycle",
+  "backgrounds": [
+    "cream"
+  ],
+  "bgMode": "single",
+  "bgEvery": 3,
+  "theme": "tutorial",
+  "handle": "akariu",
+  "stepLabel": "Langkah",
+  "audio": {
+    "music": true,
+    "sfx": true,
+    "blockSfx": true
+  }
+}
