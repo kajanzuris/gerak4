@@ -142,4 +142,3 @@ for e in err: print('KESALAHAN:', e)
 print(f'{len(sc)} adegan, {len(err)} kesalahan, {len(warn)} peringatan')
 print('OK, siap prepare.py' if not err else 'GAGAL: perbaiki dulu scenes.src.json')
 sys.exit(1 if err else 0)
-
