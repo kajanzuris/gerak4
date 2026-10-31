@@ -1,0 +1,239 @@
+{
+  "style": "explainer",
+  "tag": "Seni Menjual Personal",
+  "accent": "#ff3f8e",
+  "charColor": "#222222",
+  "scenes": [
+    {
+      "title": "Kebanyakan orang *salah* mengira",
+      "start": 0,
+      "small": 2,
+      "orb": "big",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img01.png",
+          "h": 700,
+          "caption": "Mendengar di tengah keramaian"
+        }
+      ]
+    },
+    {
+      "title": "kalau *jualan* itu soal bicara,",
+      "start": 2,
+      "small": 1,
+      "orb": "small",
+      "stage": [
+        {
+          "type": "chip",
+          "title": "Seni Bicara",
+          "icon": "🗣️",
+          "tone": "#3b6fd8"
+        }
+      ]
+    },
+    {
+      "title": "padahal sebenarnya ini soal *mendengar.*",
+      "start": 4.4,
+      "small": 2,
+      "orb": "hide",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img02.png",
+          "h": 700,
+          "caption": "Mendengarkan cangkang siput berpendar"
+        }
+      ]
+    },
+    {
+      "title": "Coba lihat *sekelilingmu* dengan tengang,",
+      "start": 8.4,
+      "small": 0,
+      "orb": "small",
+      "stage": [
+        {
+          "type": "chip",
+          "title": "Observasi",
+          "icon": "👁️",
+          "tone": "#1f9d8a"
+        }
+      ]
+    },
+    {
+      "title": "tatap layar ponselmu seolah itu *jendela,*",
+      "start": 10.5,
+      "small": 3,
+      "orb": "hide",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img03.png",
+          "h": 700,
+          "caption": "Ponsel sebagai jendela cahaya"
+        }
+      ]
+    },
+    {
+      "title": "bukan *dinding* yang menghalangi.",
+      "start": 13.4,
+      "small": 1,
+      "orb": "small",
+      "stage": [
+        {
+          "type": "tiles",
+          "cols": [
+            {
+              "head": "Jendela",
+              "mid": "Peluang",
+              "tag": "✓"
+            },
+            {
+              "head": "Dinding",
+              "mid": "Pembatas",
+              "tag": "✕"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Nah, tawarkan solusi *kecil* untuk satu orang saja,",
+      "start": 15.9,
+      "small": 1,
+      "orb": "hide",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img04.png",
+          "h": 700,
+          "caption": "Memberi solusi kecil personal"
+        }
+      ]
+    },
+    {
+      "title": "bukan sekedar teriakan di tengah *keramaian.*",
+      "start": 19.4,
+      "small": 2,
+      "orb": "small",
+      "stage": [
+        {
+          "type": "notifs",
+          "notifs": [
+            {
+              "text": "Kebisingan",
+              "sub": "Teriakan sia-sia",
+              "icon": "📢"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Biarkan penolakan mengalir seperti *air* hujan,",
+      "start": 22.9,
+      "small": 2,
+      "orb": "hide",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img05.png",
+          "h": 700,
+          "caption": "Penolakan seperti air hujan"
+        }
+      ]
+    },
+    {
+      "title": "mendinginkan *tanpa* merusak.",
+      "start": 25.6,
+      "small": 1,
+      "orb": "small",
+      "stage": [
+        {
+          "type": "chip",
+          "title": "Resiliensi",
+          "icon": "💧",
+          "tone": "#3b6fd8"
+        }
+      ]
+    },
+    {
+      "title": "Kamu akan sadar kalau *keberanian* itu",
+      "start": 27.8,
+      "small": 3,
+      "orb": "small",
+      "stage": [
+        {
+          "type": "kpi",
+          "title": "Kekuatan Mental",
+          "value": "100%",
+          "icon": "🛡️",
+          "pct": 100,
+          "big": false
+        }
+      ]
+    },
+    {
+      "title": "bukan berarti tanpa rasa *takut.*",
+      "start": 30.6,
+      "small": 2,
+      "orb": "hide",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img06.png",
+          "h": 700,
+          "caption": "Menyimpan pesan dalam botol"
+        }
+      ]
+    },
+    {
+      "title": "Jadi, simpan *pesan* ini sebagai pengingat",
+      "start": 33.4,
+      "small": 1,
+      "orb": "hide",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img07.png",
+          "h": 700,
+          "caption": "Waktu dan keraguan melayang"
+        }
+      ]
+    },
+    {
+      "title": "saat rasa *ragu* kembali mengetuk pintu hatimu.",
+      "start": 36.7,
+      "small": 2,
+      "orb": "hide",
+      "stage": [
+        {
+          "type": "brand",
+          "sub": "Simpan untuk nanti",
+          "title": "NamaBrandSaya",
+          "cta": "Link-nya di bio"
+        }
+      ]
+    }
+  ],
+  "header": false,
+  "charStyle": "stick",
+  "transitions": [
+    "fade",
+    "slide-up",
+    "zoom",
+    "wipe"
+  ],
+  "transitionsMode": "random",
+  "backgrounds": [
+    "cream"
+  ],
+  "bgMode": "single",
+  "bgEvery": 3,
+  "theme": "neon",
+  "audio": {
+    "music": true,
+    "sfx": true,
+    "blockSfx": true
+  }
+}
