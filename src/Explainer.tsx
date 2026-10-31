@@ -256,6 +256,37 @@ const Appear: React.FC<{ t0: number; children: React.ReactNode; style?: React.CS
   );
 };
 
+// Efek ketik animasi (Typewriter effect): teks diketik huruf demi huruf setelah objek media/kartu muncul
+const Typewriter: React.FC<{
+  text: string;
+  t0: number;
+  delay?: number;
+  speed?: number;
+  cursor?: boolean;
+  style?: React.CSSProperties;
+}> = ({ text, t0, delay = 0.28, speed = 28, cursor = true, style }) => {
+  const { t } = React.useContext(Ctx);
+  if (!text) return null;
+  const startT = t0 + delay;
+  if (t < startT) {
+    return <span style={{ ...style, visibility: "hidden" }}>{text}</span>;
+  }
+  const elapsed = Math.max(0, t - startT);
+  const n = Math.min(text.length, Math.floor(elapsed * speed));
+  const isTyping = n < text.length;
+  const blink = Math.floor(t * 3.5) % 2 === 0;
+
+  return (
+    <span style={style}>
+      {text.slice(0, n)}
+      {cursor && (isTyping || elapsed < (text.length / speed) + 1.2) ? (
+        <span style={{ opacity: blink ? 1 : 0, fontWeight: 300, marginLeft: 2, display: "inline-block" }}>|</span>
+      ) : null}
+      <span style={{ visibility: "hidden" }}>{text.slice(n)}</span>
+    </span>
+  );
+};
+
 const Check = () => (
   <svg width={22} height={22} viewBox="0 0 24 24">
     <path d="M5 12.5l4.5 4.5L19 7.5" stroke="#fff" strokeWidth={3.5} fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -451,16 +482,24 @@ const DialogView: React.FC<{ b: Item; t0: number }> = ({ b, t0 }) => (
     <div style={card}>
       <div style={{ background: V.note, padding: "16px 24px", display: "flex", alignItems: "center", gap: 14 }}>
         <div style={{ width: 40, height: 40, borderRadius: 20, background: "#f5a623", color: "#fff", fontWeight: 800, fontSize: 26, display: "flex", alignItems: "center", justifyContent: "center" }}>!</div>
-        <div style={{ fontWeight: 800, fontSize: 28 }}>{b.title}</div>
+        <div style={{ fontWeight: 800, fontSize: 28 }}>
+          <Typewriter text={b.title || ""} t0={t0} delay={0.15} speed={28} />
+        </div>
       </div>
       <div style={{ padding: "30px 28px", textAlign: "center" }}>
-        <div style={{ fontSize: 38, fontWeight: 800 }}>{b.text}</div>
+        <div style={{ fontSize: 38, fontWeight: 800 }}>
+          <Typewriter text={b.text || ""} t0={t0} delay={0.3} speed={26} />
+        </div>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 20, margin: "26px 0 10px" }}>
           {[0, 1, 2].map((i) => <FileIcon key={i} i={i} s={44} />)}
           <svg width={40} height={24} viewBox="0 0 40 24"><path d="M2 12h32M26 4l8 8-8 8" stroke={C.mute} strokeWidth={3.5} fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
           <Trash />
         </div>
-        {b.sub ? <div style={{ fontSize: 22, color: V.mute }}>{b.sub}</div> : null}
+        {b.sub ? (
+          <div style={{ fontSize: 22, color: V.mute }}>
+            <Typewriter text={b.sub} t0={t0} delay={0.6} speed={30} />
+          </div>
+        ) : null}
         <div style={{ display: "flex", gap: 18, justifyContent: "center", marginTop: 26 }}>
           {(b.buttons || []).map((x, i, a) => <Btn key={i} label={x} main={i === a.length - 1} />)}
         </div>
@@ -474,8 +513,14 @@ const CalloutView: React.FC<{ b: Item; t0: number }> = ({ b, t0 }) => {
   return (
     <Appear t0={t0}>
       <div style={{ ...card, padding: "48px 40px", textAlign: "center", background: V.callout }}>
-        <div style={{ fontSize: 64, fontWeight: 800, color: accent, letterSpacing: 1 }}>{b.title}</div>
-        {b.sub ? <div style={{ fontSize: 28, color: V.mute, margin: "12px 0 28px" }}>{b.sub}</div> : null}
+        <div style={{ fontSize: 64, fontWeight: 800, color: accent, letterSpacing: 1 }}>
+          <Typewriter text={b.title || ""} t0={t0} delay={0.2} speed={24} />
+        </div>
+        {b.sub ? (
+          <div style={{ fontSize: 28, color: V.mute, margin: "12px 0 28px" }}>
+            <Typewriter text={b.sub} t0={t0} delay={0.5} speed={30} />
+          </div>
+        ) : null}
         {b.cta ? <div style={{ display: "inline-block", background: accent, color: "#fff", borderRadius: 40, padding: "14px 36px", fontWeight: 800, fontSize: 30 }}>{b.cta}</div> : null}
       </div>
     </Appear>
@@ -538,7 +583,11 @@ const ImageView: React.FC<{ b: Item; t0: number }> = ({ b, t0 }) => {
             <Img src={staticFile(`${name}/${b.src}`)} style={{ maxWidth: "100%", height: "100%", objectFit: "contain", filter: "drop-shadow(0 18px 24px rgba(0,0,0,.25))", transform: `translateY(${Math.sin(t * 2) * 8}px)` }} />
           ) : null}
         </div>
-        {b.caption ? <div style={{ fontSize: 28, fontWeight: 600, textAlign: "center", marginTop: 8, color: pageMute }}>{b.caption}</div> : null}
+        {b.caption ? (
+          <div style={{ fontSize: 28, fontWeight: 600, textAlign: "center", marginTop: 8, color: pageMute }}>
+            <Typewriter text={b.caption} t0={t0} delay={0.28} speed={28} />
+          </div>
+        ) : null}
       </Appear>
     );
   }
@@ -548,7 +597,11 @@ const ImageView: React.FC<{ b: Item; t0: number }> = ({ b, t0 }) => {
         <div style={{ height: b.h || 640, borderRadius: 22, overflow: "hidden", background: V.soft }}>
           {b.src ? <Img src={staticFile(`${name}/${b.src}`)} style={{ width: "100%", height: "100%", objectFit: b.fit === "contain" ? "contain" : "cover", transform: `scale(${zoom})` }} /> : null}
         </div>
-        {b.caption ? <div style={{ fontSize: 28, fontWeight: 600, textAlign: "center", margin: "14px 0 4px", color: V.mute }}>{b.caption}</div> : null}
+        {b.caption ? (
+          <div style={{ fontSize: 28, fontWeight: 600, textAlign: "center", margin: "14px 0 4px", color: V.mute }}>
+            <Typewriter text={b.caption} t0={t0} delay={0.28} speed={28} />
+          </div>
+        ) : null}
       </div>
     </Appear>
   );
@@ -773,8 +826,14 @@ const ChipView: React.FC<{ b: Item; t0: number }> = ({ b, t0 }) => {
       <div style={{ ...card, border: `2px solid ${tone}`, padding: "20px 26px", display: "flex", alignItems: "center", gap: 22 }}>
         <IconTile glyph={b.icon} fallback={(b.title || "?").slice(0, 1)} tone={tone} size={78} />
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 44, fontWeight: 800, lineHeight: 1.1 }}>{b.title}</div>
-          {b.sub ? <div style={{ fontSize: 24, color: V.mute, marginTop: 4 }}>{b.sub}</div> : null}
+          <div style={{ fontSize: 44, fontWeight: 800, lineHeight: 1.1 }}>
+            <Typewriter text={b.title || ""} t0={t0} delay={0.22} speed={26} />
+          </div>
+          {b.sub ? (
+            <div style={{ fontSize: 24, color: V.mute, marginTop: 4 }}>
+              <Typewriter text={b.sub} t0={t0} delay={0.5} speed={30} />
+            </div>
+          ) : null}
         </div>
         {b.tag ? <div style={{ border: `2px solid ${tone}`, color: tone, borderRadius: 30, padding: "6px 18px", fontSize: 22, fontWeight: 700 }}>{b.tag}</div> : null}
       </div>
@@ -915,9 +974,15 @@ const ProfileView: React.FC<{ b: Item; t0: number }> = ({ b, t0 }) => {
           <div style={{ width: 120, height: 120, borderRadius: 60, background: accent, color: fgOn(accent), overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 56, fontWeight: 800, flexShrink: 0 }}>
             {b.src ? <Img src={staticFile(`${name}/${b.src}`)} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : b.icon || (b.title || "?").slice(0, 1).toUpperCase()}
           </div>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: 48, fontWeight: 800, lineHeight: 1.1 }}>{b.title}</div>
-            {b.sub ? <div style={{ fontSize: 26, color: V.mute, marginTop: 6 }}>{b.sub}</div> : null}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 48, fontWeight: 800, lineHeight: 1.1 }}>
+              <Typewriter text={b.title || ""} t0={t0} delay={0.25} speed={26} />
+            </div>
+            {b.sub ? (
+              <div style={{ fontSize: 26, color: V.mute, marginTop: 6 }}>
+                <Typewriter text={b.sub} t0={t0} delay={0.55} speed={30} />
+              </div>
+            ) : null}
           </div>
         </div>
         {b.cta ? <div style={{ marginTop: 24, background: V.ghost, color: V.cardInk, borderRadius: 16, padding: "18px 0", textAlign: "center", fontSize: 32, fontWeight: 800 }}>{b.cta}</div> : null}
@@ -932,8 +997,14 @@ const BrandView: React.FC<{ b: Item; t0: number }> = ({ b, t0 }) => {
   return (
     <Appear t0={t0}>
       <div style={{ textAlign: "center", color: ink, fontFamily: FONT }}>
-        {b.sub ? <div style={{ fontSize: 40, fontWeight: 600, marginBottom: 18, opacity: 0.9 }}>{b.sub}</div> : null}
-        <div style={{ fontSize: 118, fontWeight: 800, letterSpacing: -2, lineHeight: 1.05 }}>{b.title}</div>
+        {b.sub ? (
+          <div style={{ fontSize: 40, fontWeight: 600, marginBottom: 18, opacity: 0.9 }}>
+            <Typewriter text={b.sub} t0={t0} delay={0.2} speed={28} />
+          </div>
+        ) : null}
+        <div style={{ fontSize: 118, fontWeight: 800, letterSpacing: -2, lineHeight: 1.05 }}>
+          <Typewriter text={b.title || ""} t0={t0} delay={0.45} speed={20} />
+        </div>
         <div style={{ position: "relative", width: 160, height: 72, borderRadius: 36, background: "#1fb86a", margin: "36px auto 0", boxShadow: "0 0 30px rgba(31,184,106,.45)" }}>
           <div style={{ position: "absolute", right: 8, top: 8, width: 56, height: 56, borderRadius: 28, background: "#06331c", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <div style={{ width: 22, height: 22, borderRadius: 11, border: "4px solid #fff", boxSizing: "border-box" }} />
@@ -1333,7 +1404,7 @@ export const Explainer: React.FC<StoryProps> = ({ name, data: d }) => {
   const base = sc.start;
 
   const talk = data.env ? data.env[Math.min(data.env.length - 1, frame)] : undefined;
-  const hasMascot = !!sc.mascot && !neon; // tema neon memakai maskot orb sendiri
+  const hasMascot = !!sc.mascot && data.char !== "plain";
   const persist = hasMascot && prev?.mascot === sc.mascot;
   const ent = persist ? 1 : clamp01(spring({ frame: frame - Math.round(base * fps), fps, config: { damping: 14 } }));
   const mx = classic ? (sc.mascot === "left" ? 300 : sc.mascot === "right" ? 780 : 540) : sc.mascot === "left" ? 250 : sc.mascot === "right" ? 830 : 540;
@@ -1422,7 +1493,8 @@ export const Explainer: React.FC<StoryProps> = ({ name, data: d }) => {
   // ---- tema neon: maskot orb besar (hook / tanpa kartu) atau kecil (di bawah kartu), berpindah halus ----
   const orbFor = (i: number) => {
     const sn = data.scenes[i];
-    const hide = sn.orb === "hide" || !!sn.stage?.some((b) => b.type === "brand");
+    const hasChar = !!sn.mascot && data.char !== "plain";
+    const hide = sn.orb === "hide" || hasChar || !!sn.stage?.some((b) => b.type === "brand");
     const big = sn.orb ? sn.orb === "big" : !(sn.stage && sn.stage.length) || (sn.stage.length === 1 && sn.stage[0].type === "chip");
     return { hide, y: big ? 900 : 1620, sc: big ? 1.15 : 0.62 };
   };
@@ -1462,7 +1534,7 @@ export const Explainer: React.FC<StoryProps> = ({ name, data: d }) => {
       {hasMascot && cstyle === "sprite" && data.charImg ? (
         <SpriteMascot name={name} img={data.charImg} talkImg={data.charTalkImg} x={mx} flip={flip} pose={poseName} f={frame} talk={talk ?? 0} ent={ent} feet={feet} />
       ) : hasMascot ? (
-        <svg viewBox="0 0 1080 1920" width={1080} height={1920} style={{ position: "absolute", left: 0, top: 0, filter: hud ? `drop-shadow(0 0 14px ${accent}99)` : undefined }}>
+        <svg viewBox="0 0 1080 1920" width={1080} height={1920} style={{ position: "absolute", left: 0, top: 0, filter: hud ? `drop-shadow(0 0 14px ${accent}99)` : neon ? `drop-shadow(0 0 18px ${accent}88)` : undefined }}>
           <g transform={`translate(${mx},${feet + (1 - ent) * 420}) scale(${flip ? -mScale : mScale},${mScale})`}>
             <ellipse cx={0} cy={4} rx={100} ry={14} fill="#000" opacity={0.15} />
             {cstyle === "stick" && typeof Stick !== "undefined" ? (
@@ -1474,16 +1546,16 @@ export const Explainer: React.FC<StoryProps> = ({ name, data: d }) => {
         </svg>
       ) : null}
       {neon && orbVis > 0.01 ? <OrbMascot x={540} y={orbY} s={orbS} f={frame} talk={talk ?? 0} op={orbVis} /> : null}
-      {tut && sc.step ? <StepBadge step={sc.step} label={data.stepLabel || "Langkah"} t0={stepStart} /> : null}
+      {tut && sc.step && data.header !== false ? <StepBadge step={sc.step} label={data.stepLabel || "Langkah"} t0={stepStart} /> : null}
       {hud ? <HudCaption words={data.words || []} t={t} accent={accent} /> : null}
       {tut ? <TutCaption words={data.words || []} t={t} /> : null}
       {neon ? <NeonCaption words={data.words || []} t={t} accent={accent} /> : null}
-      {tut && data.handle ? <HandleTag text={data.handle} /> : null}
+      {tut && data.handle && data.header !== false ? <HandleTag text={data.handle} /> : null}
       {classic ? <ClassicCaption words={data.words || []} t={t} accent={accent} /> : null}
       {classic && data.header !== false && data.brand ? (
         <div style={{ position: "absolute", left: 60, bottom: 330, color: "rgba(255,255,255,0.45)", fontSize: 34, fontFamily: FONT }}>{data.brand}</div>
       ) : null}
-      {data.cta && frame >= ctaStart ? (
+      {data.cta && (data as any)?.showCta !== false && frame >= ctaStart ? (
         <AbsoluteFill style={{ alignItems: "center", justifyContent: "flex-end", paddingBottom: 110 }}>
           <div style={{ padding: "22px 52px", borderRadius: 60, background: accent, color: "#fff", fontWeight: 800, fontSize: 46, fontFamily: FONT }}>{data.cta}</div>
         </AbsoluteFill>
