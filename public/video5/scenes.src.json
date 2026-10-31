@@ -1,0 +1,269 @@
+{
+  "style": "explainer",
+  "tag": "Penjualan Berempati",
+  "accent": "#ff5a1f",
+  "char": "robot",
+  "charColor": "#222222",
+  "scenes": [
+    {
+      "start": 0,
+      "title": "Kebanyakan orang *salah* mengira",
+      "small": 2,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img01.png",
+          "h": 700,
+          "caption": "Mitos tentang menjual"
+        }
+      ]
+    },
+    {
+      "start": 2,
+      "title": "kalau *jualan* itu soal bicara,",
+      "small": 1,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img02.png",
+          "hold": true,
+          "h": 700,
+          "caption": "Mendengar adalah kunci"
+        }
+      ],
+      "step": "1/4"
+    },
+    {
+      "start": 4.4,
+      "title": "padahal sebenarnya ini soal *mendengar.*",
+      "small": 3,
+      "step": "1/4",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img03.png",
+          "h": 700,
+          "caption": "Perspektif jendela baru"
+        }
+      ]
+    },
+    {
+      "start": 8.4,
+      "title": "Coba lihat *sekelilingmu* dengan tengang,",
+      "small": 2,
+      "step": "2/4",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img04.png",
+          "h": 700,
+          "caption": "Satu fokus utama"
+        }
+      ]
+    },
+    {
+      "start": 10.5,
+      "title": "tatap layar *ponselmu* seolah itu jendela,",
+      "small": 2,
+      "step": "2/4",
+      "stage": [
+        {
+          "type": "browser",
+          "url": "jendela.io",
+          "title": "Perspektif",
+          "at": "ponselmu"
+        }
+      ]
+    },
+    {
+      "start": 13.4,
+      "title": "bukan *dinding* yang menghalangi.",
+      "small": 1,
+      "step": "2/4",
+      "stage": [
+        {
+          "type": "chip",
+          "title": "Buka Hambatan",
+          "icon": "🔓",
+          "tone": "#ff5a1f"
+        }
+      ]
+    },
+    {
+      "start": 15.9,
+      "title": "Nah, tawarkan *solusi* kecil",
+      "small": 1,
+      "step": "3/4",
+      "stage": [
+        {
+          "type": "phone",
+          "title": "Solusi",
+          "rows": [
+            {
+              "from": "bot",
+              "text": "Ini bantuan untukmu."
+            }
+          ],
+          "at": "solusi"
+        }
+      ]
+    },
+    {
+      "start": 17.7,
+      "title": "untuk *satu* orang saja,",
+      "small": 1,
+      "step": "3/4",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img05.png",
+          "at": "satu",
+          "h": 700,
+          "caption": "Menghadapi penolakan"
+        }
+      ]
+    },
+    {
+      "start": 19.4,
+      "title": "bukan sekedar *teriakan* di tengah keramaian.",
+      "small": 2,
+      "step": "3/4",
+      "stage": [
+        {
+          "type": "bars",
+          "title": "Volume Suara",
+          "bars": [
+            {
+              "label": "Massa",
+              "value": 90
+            },
+            {
+              "label": "Kamu",
+              "value": 20
+            },
+            {
+              "label": "3",
+              "value": 70
+            }
+          ],
+          "hi": 1
+        }
+      ]
+    },
+    {
+      "start": 22.9,
+      "title": "Biarkan *penolakan* mengalir seperti air hujan,",
+      "small": 1,
+      "step": "4/4",
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img06.png",
+          "h": 700,
+          "caption": "Keberanian sejati"
+        }
+      ]
+    },
+    {
+      "start": 25.6,
+      "title": "*mendinginkan* tanpa merusak.",
+      "small": 0,
+      "step": "4/4",
+      "stage": [
+        {
+          "type": "terminal",
+          "title": "Status Sistem",
+          "lines": [
+            {
+              "text": "pendinginan...",
+              "k": "dim"
+            },
+            {
+              "text": "✓ sistem stabil",
+              "k": "ok"
+            }
+          ],
+          "at": "mendinginkan"
+        }
+      ]
+    },
+    {
+      "start": 27.8,
+      "title": "Kamu akan *sadar* kalau keberanian itu",
+      "small": 3,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img07.png",
+          "h": 700,
+          "caption": "Kamu akan sadar kalau"
+        }
+      ],
+      "step": "4/4"
+    },
+    {
+      "start": 30.6,
+      "title": "bukan berarti tanpa rasa *takut.*",
+      "small": 3,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img08.png",
+          "hold": true,
+          "h": 700,
+          "caption": "bukan berarti tanpa rasa"
+        }
+      ],
+      "step": "4/4"
+    },
+    {
+      "start": 33.4,
+      "title": "Jadi, *simpan* pesan ini sebagai pengingat",
+      "small": 1,
+      "stage": [
+        {
+          "type": "callout",
+          "title": "Simpan Pesan",
+          "sub": "Tekan ikon bookmark",
+          "cta": "Simpan Sekarang"
+        }
+      ],
+      "step": "4/4"
+    },
+    {
+      "start": 36.7,
+      "title": "saat rasa ragu kembali *mengetuk* pintu hatimu.",
+      "small": 3,
+      "stage": [
+        {
+          "type": "profile",
+          "title": "@NamaBrandSaya",
+          "sub": "Temukan ketenangan dalam jualan",
+          "cta": "Follow"
+        }
+      ]
+    }
+  ],
+  "header": false,
+  "charStyle": "stick",
+  "transitions": [
+    "fade",
+    "slide-left",
+    "slide-up",
+    "zoom"
+  ],
+  "transitionsMode": "random",
+  "backgrounds": [
+    "cream"
+  ],
+  "bgMode": "single",
+  "bgEvery": 3,
+  "theme": "tutorial",
+  "handle": "akariu",
+  "stepLabel": "Langkah",
+  "audio": {
+    "music": true,
+    "sfx": true,
+    "blockSfx": true
+  }
+}
