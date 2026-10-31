@@ -1,0 +1,3254 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Penyusun Scenes â€” Pipeline Remotion 9:16 Explainer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            remotionRed: '#e5252a',
+            remotionBlue: '#3b6fd8',
+            remotionGreen: '#1f9d8a',
+            remotionCream: '#faf6ef',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0b0d13;
+      color: #f3f4f6;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #11141d;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2a3042;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3b435c;
+    }
+    .stage-preview-bg {
+      background-color: #faf6ef;
+      background-image: radial-gradient(#e5dfd3 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+    @keyframes pulseSubtle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.65; }
+    }
+    .animate-pulse-subtle {
+      animation: pulseSubtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+  <style>
+    /* ===== Tampilan pilihan: dropdown, kotak centang, tombol berwarna ===== */
+    .pick{appearance:none;-webkit-appearance:none;cursor:pointer;background-color:#0b1220!important;
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2322d3ee' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>")!important;
+      background-repeat:no-repeat!important;background-position:right 10px center!important;background-size:16px!important;
+      padding-right:34px!important;border:2px solid rgba(34,211,238,.55)!important;border-radius:12px!important;color:#e6fbff!important;font-weight:600;transition:.15s}
+    .pick:hover{border-color:#22d3ee!important;box-shadow:0 0 14px rgba(34,211,238,.35)}
+    .pick:focus{outline:none;border-color:#f59e0b!important;box-shadow:0 0 0 3px rgba(245,158,11,.35)}
+    .pick option{background:#0b1220;color:#e6fbff}
+    input[data-numpick]{border:2px solid rgba(34,211,238,.55)!important;border-radius:12px!important;color:#e6fbff!important;font-weight:600}
+    .opt{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem .75rem;border-radius:12px;border:2px solid #334155;background:#0f172a;cursor:pointer;user-select:none;transition:.15s;color:#cbd5e1}
+    .opt:hover{border-color:#a78bfa}
+    .opt:has(input:checked){border-color:#22d3ee;background:linear-gradient(135deg,rgba(34,211,238,.24),rgba(167,139,250,.2));color:#fff;box-shadow:0 0 12px rgba(34,211,238,.25)}
+    .opt input{accent-color:#22d3ee;width:1rem;height:1rem}
+    .hint{font-size:11px;color:#94a3b8}
+    .badge-pick{display:inline-flex;align-items:center;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:linear-gradient(90deg,#f59e0b,#ef4444);color:#fff;letter-spacing:.04em;white-space:nowrap}
+    .setcard{border-radius:16px;border:1px solid #1e293b;background:linear-gradient(180deg,#0f172a,#0b1220);position:relative;overflow:hidden}
+    .setcard::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--c1,#a78bfa)}
+    .themeCard input:checked + .themeBox{border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.25),0 0 22px rgba(34,211,238,.3)}
+    .themeCard:hover .themeBox{border-color:#a78bfa}
+    .btn-violet,.btn-amber,.btn-cyan,.btn-emerald,.btn-rose{color:#fff!important;border:0!important;font-weight:700!important;box-shadow:0 4px 14px rgba(0,0,0,.35);transition:.15s}
+    .btn-violet{background:linear-gradient(135deg,#8b5cf6,#6366f1)!important}
+    .btn-amber{background:linear-gradient(135deg,#f59e0b,#f97316)!important}
+    .btn-cyan{background:linear-gradient(135deg,#06b6d4,#3b82f6)!important}
+    .btn-emerald{background:linear-gradient(135deg,#10b981,#059669)!important}
+    .btn-rose{background:linear-gradient(135deg,#f43f5e,#e11d48)!important}
+    .btn-violet:hover,.btn-amber:hover,.btn-cyan:hover,.btn-emerald:hover,.btn-rose:hover{filter:brightness(1.15);transform:translateY(-1px)}
+    .btn-glow{animation:glowpulse 2.2s infinite}
+    @keyframes glowpulse{0%{box-shadow:0 0 0 0 rgba(229,37,42,.55),0 8px 24px rgba(229,37,42,.35)}70%{box-shadow:0 0 0 12px rgba(229,37,42,0),0 8px 24px rgba(229,37,42,.35)}100%{box-shadow:0 0 0 0 rgba(229,37,42,0),0 8px 24px rgba(229,37,42,.35)}}
+    .imgPreset{color:#fff!important;font-weight:700!important;border:0!important;box-shadow:0 3px 10px rgba(0,0,0,.35);transition:.15s}
+    .imgPreset:nth-child(1){background:linear-gradient(135deg,#f59e0b,#f97316)!important}
+    .imgPreset:nth-child(2){background:linear-gradient(135deg,#06b6d4,#3b82f6)!important}
+    .imgPreset:nth-child(3){background:linear-gradient(135deg,#8b5cf6,#d946ef)!important}
+    .imgPreset:nth-child(4){background:linear-gradient(135deg,#10b981,#059669)!important}
+    .imgPreset:nth-child(5){background:linear-gradient(135deg,#f43f5e,#fb7185)!important}
+    .imgPreset:hover{filter:brightness(1.15);transform:translateY(-1px)}
+    .accentSwatch{transition:.15s}.accentSwatch:hover{transform:scale(1.25);box-shadow:0 0 10px rgba(255,255,255,.5)}
+  </style>
+</head>
+<body class="min-h-screen font-sans antialiased selection:bg-remotionRed selection:text-white">
+
+  <!-- Top Navigation / Header -->
+  <header class="sticky top-0 z-30 border-b border-slate-800/80 bg-[#0b0d13]/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#e5252a] to-orange-600 flex items-center justify-center shadow-lg shadow-red-900/30 font-extrabold text-white text-lg">
+          9:16
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-base sm:text-lg text-white tracking-tight">Penyusun Scenes AI</h1>
+            <span class="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/30">Remotion Explainer</span>
+          </div>
+          <p class="text-xs text-slate-400">Otomatisasi SRT / MP3 &rarr; <code class="text-slate-300">scenes.src.json</code> + <code class="text-slate-300">voiceover.srt</code> + Ilustrasi Vektor 4:3</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btnLoadDemo" type="button" class="btn-violet text-xs font-medium px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          Muat Contoh SRT
+        </button>
+        <button id="btnToggleSettings" type="button" class="btn-amber text-xs font-medium px-3 py-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/80 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Pengaturan &amp; Tampilan
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+    
+    <!-- Collapsible Pengaturan Tetap Banner -->
+    <section id="settingsPanel" class="mb-6 rounded-2xl bg-slate-900/90 border border-slate-800 p-4 sm:p-5 shadow-xl">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-remotionRed"></span>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300">Pengaturan &amp; Tampilan Video</h2>
+        </div>
+        <span class="text-[11px] text-slate-400">Sesuai skema tingkat atas <code class="text-slate-300">scenes.src.json</code></span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+        <div>
+          <label class="block text-xs text-slate-300 mb-1 font-semibold">Nama Brand <span class="hint">(ketik sendiri)</span></label>
+          <input id="cfgBrand" type="text" value="NamaBrandSaya" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-remotionRed" />
+        </div>
+        <div>
+          <label class="block text-xs text-slate-300 mb-1 font-semibold">Teks Ajakan (CTA) <span class="hint">(ketik sendiri)</span></label>
+          <input id="cfgCta" type="text" value="Link-nya di bio" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-remotionRed" />
+        </div>
+        <div>
+          <label class="block text-xs text-slate-300 mb-1 font-semibold">Tipe Karakter <span class="badge-pick">PILIH</span></label>
+          <select id="cfgChar" class="pick w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-remotionRed">
+            <option value="boss" selected>Bos (bertopi hitam)</option>
+            <option value="girl">Cewek (rambut panjang, rok)</option>
+            <option value="robot">Robot (kepala kotak)</option>
+            <option value="plain">Polos (tanpa atribut)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs text-slate-300 mb-1 font-semibold">Warna Aksen <span class="badge-pick">PILIH WARNA</span></label>
+          <div class="flex items-center gap-2">
+            <input id="cfgAccentPicker" type="color" value="#e5252a" class="h-9 w-12 shrink-0 rounded bg-slate-950 border border-slate-800 cursor-pointer" title="Klik untuk memilih warna" />
+            <input id="cfgAccent" type="text" value="#e5252a" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm font-mono text-white focus:outline-none focus:border-remotionRed" />
+          </div>
+          <div class="flex gap-1.5 mt-1.5">
+            <button type="button" data-accent="#e5252a" class="accentSwatch w-6 h-6 rounded-full border border-slate-700" style="background:#e5252a" title="Merah"></button>
+            <button type="button" data-accent="#3b6fd8" class="accentSwatch w-6 h-6 rounded-full border border-slate-700" style="background:#3b6fd8" title="Biru"></button>
+            <button type="button" data-accent="#1f9d8a" class="accentSwatch w-6 h-6 rounded-full border border-slate-700" style="background:#1f9d8a" title="Hijau"></button>
+            <button type="button" data-accent="#f59e0b" class="accentSwatch w-6 h-6 rounded-full border border-slate-700" style="background:#f59e0b" title="Oranye"></button>
+            <button type="button" data-accent="#7b4fd8" class="accentSwatch w-6 h-6 rounded-full border border-slate-700" style="background:#7b4fd8" title="Ungu"></button>
+            <button type="button" data-accent="#ec4899" class="accentSwatch w-6 h-6 rounded-full border border-slate-700" style="background:#ec4899" title="Pink"></button>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs text-slate-300 mb-1 font-semibold">Mode Gambar <span class="badge-pick">PILIH</span></label>
+          <select id="cfgImageMode" class="pick w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-remotionRed">
+            <option value="auto" selected>Buat Gambar AI + Prompt (Otomatis)</option>
+            <option value="prompt_only">Manual: placeholder dulu, klik &quot;Buat ulang&quot; per gambar</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ====== TAMPILAN VIDEO (baru) ====== -->
+      <div class="mt-5 pt-5 border-t border-slate-800 space-y-5">
+        <div class="rounded-xl border border-amber-400/40 bg-gradient-to-r from-amber-500/15 to-rose-500/10 p-3 flex gap-3 items-start">
+          <span class="text-xl leading-none">&#128161;</span>
+          <div class="text-xs text-amber-100 leading-relaxed">
+            <b>Semua kotak berwarna di bawah ini adalah PILIHAN yang bisa Anda tentukan sendiri.</b>
+            Kotak dengan panah <span class="inline-block px-1.5 rounded bg-cyan-500/20 text-cyan-300 font-bold">&#9662;</span> = daftar pilihan (klik, lalu pilih).
+            Kotak yang menyala saat dicentang = bisa dinyalakan atau dimatikan. Tombol warna-warni = pilihan cepat.
+            Tidak wajib mengubah apa pun: pengaturan bawaan sudah siap dipakai.
+          </div>
+        </div>
+        <div class="setcard p-3.5 space-y-3">
+          <div class="flex items-center justify-between gap-2"><h3 class="text-xs font-extrabold uppercase tracking-wider text-white">Tema video</h3><span class="badge-pick">BISA DIPILIH</span></div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <label class="themeCard block cursor-pointer">
+              <input type="radio" name="cfgTheme" value="clean" checked class="sr-only" />
+              <div class="themeBox rounded-xl p-3 border-2 border-slate-700 bg-slate-900/60 transition">
+                <div class="h-16 rounded-lg mb-2 flex items-center justify-center font-extrabold text-xl" style="background:#f3efe6 radial-gradient(#d9d2c1 1.5px,transparent 2px) 0 0/14px 14px;color:#16161a">Aa<span style="color:#e5252a;margin-left:8px">Bersih</span></div>
+                <div class="text-sm font-bold text-white">Bersih (terang)</div>
+                <div class="hint">Latar krem atau pastel dengan kartu putih. Cocok untuk edukasi, tips, dan bisnis.</div>
+              </div>
+            </label>
+            <label class="themeCard block cursor-pointer">
+              <input type="radio" name="cfgTheme" value="hud" class="sr-only" />
+              <div class="themeBox rounded-xl p-3 border-2 border-slate-700 bg-slate-900/60 transition">
+                <div class="h-16 rounded-lg mb-2 flex items-center justify-center font-bold text-sm" style="background:radial-gradient(ellipse at 50% 30%,#12305f,#030a1a);color:#22d3ee;font-family:ui-monospace,Menlo,Consolas,monospace;text-shadow:0 0 8px #22d3ee;border:1px solid #22d3ee55">STATUS: SIAP &#9608;<span style="color:#ff7a1a;margin-left:10px">HUD</span></div>
+                <div class="text-sm font-bold text-white">HUD hologram (gelap)</div>
+                <div class="hint">Latar biru gelap dengan grid, label status, bingkai sudut, caption bawah, dan cincin hologram di maskot.</div>
+              </div>
+            </label>
+            <label class="themeCard block cursor-pointer">
+              <input type="radio" name="cfgTheme" value="classic" class="sr-only" />
+              <div class="themeBox rounded-xl p-3 border-2 border-slate-700 bg-slate-900/60 transition">
+                <div class="h-16 rounded-lg mb-2 flex items-end justify-center gap-1 overflow-hidden" style="background:linear-gradient(180deg,#050914,#16213e)">
+                  <span style="width:14px;height:26px;background:#0b0f1d"></span><span style="width:18px;height:38px;background:#0b0f1d"></span><span style="font-size:22px;line-height:1;color:#f4f1ea;margin:0 6px">&#9786;</span><span style="width:16px;height:32px;background:#0b0f1d"></span><span style="width:12px;height:22px;background:#0b0f1d"></span>
+                </div>
+                <div class="text-sm font-bold text-white">Klasik (stickman + kota)</div>
+                <div class="hint">Stickman besar di tengah, latar kota atau ruangan yang berganti, properti, dan caption di atas.</div>
+              </div>
+            </label>
+            <label class="themeCard block cursor-pointer">
+              <input type="radio" name="cfgTheme" value="tutorial" class="sr-only" />
+              <div class="themeBox rounded-xl p-3 border-2 border-slate-700 bg-slate-900/60 transition">
+                <div class="h-16 rounded-lg mb-2 flex flex-col items-center justify-center font-extrabold text-sm" style="background:#d9480f;color:#fff"><span style="background:#2b0f05;border-radius:20px;padding:1px 10px;font-size:10px">Langkah 1 /8</span><span>Paste, <span style="color:#1a0e08">enter</span></span></div>
+                <div class="text-sm font-bold text-white">Tutorial (langkah demi langkah)</div>
+                <div class="hint">Latar oranye + grid, lencana langkah, mockup terminal / browser / HP, caption pil di bawah. Seperti ved1.</div>
+              </div>
+            </label>
+            <label class="themeCard block cursor-pointer">
+              <input type="radio" name="cfgTheme" value="neon" class="sr-only" />
+              <div class="themeBox rounded-xl p-3 border-2 border-slate-700 bg-slate-900/60 transition">
+                <div class="h-16 rounded-lg mb-2 flex items-center justify-center font-extrabold text-sm gap-2" style="background:radial-gradient(ellipse at 50% 60%,#4a1240,#07020f);color:#fff"><span style="width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffd27a,#ff3f8e)"></span>Aku <span style="color:#ff3f8e">rahasia</span></div>
+                <div class="text-sm font-bold text-white">Neon + orb (promo / produk)</div>
+                <div class="hint">Latar gelap ungu, maskot orb bercahaya, kartu UI amber/pink, angka naik, grafik tumbuh. Seperti ved2.</div>
+              </div>
+            </label>
+          </div>
+          <div id="tutExtra" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div><label class="hint block mb-1">Akun di dasar layar (tema Tutorial)</label>
+              <input id="cfgHandle" type="text" placeholder="@akunmu" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white" /></div>
+            <div><label class="hint block mb-1">Kata di lencana langkah</label>
+              <input id="cfgStepLabel" type="text" value="Langkah" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white" /></div>
+          </div>
+          <p id="themeNote" class="hint hidden"></p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div class="setcard p-3.5 space-y-2.5" style="--c1:#22d3ee">
+            <div class="flex items-center justify-between gap-2"><h3 class="text-xs font-extrabold uppercase tracking-wider text-white">Elemen yang ditampilkan</h3><span class="badge-pick">BISA DIPILIH</span></div>
+            <label class="opt text-sm"><input id="cfgShowHeader" type="checkbox" checked class="accent-red-500" /> Header + nama brand</label>
+            <label class="opt text-sm"><input id="cfgShowTag" type="checkbox" checked class="accent-red-500" /> Label topik (tag), mis. &quot;Tips Jualan&quot;</label>
+            <label class="opt text-sm"><input id="cfgShowCta" type="checkbox" checked class="accent-red-500" /> Tombol ajakan (CTA) di 2 detik terakhir</label>
+            <p class="text-[11px] text-slate-500">Teks brand/CTA diisi di kolom di atas; tag diisi di kartu Input.</p>
+          </div>
+          <div class="setcard p-3.5 space-y-2.5" style="--c1:#f59e0b">
+            <div class="flex items-center justify-between gap-2"><h3 class="text-xs font-extrabold uppercase tracking-wider text-white">Karakter &amp; warna teks</h3><span class="badge-pick">BISA DIPILIH</span></div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Gaya karakter</label>
+              <select id="cfgCharStyle" class="pick w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white">
+                <option value="block" selected>Blok (gaya game)</option>
+                <option value="stick">Stickman</option>
+                <option value="sprite">Gambar sendiri (anime/apa saja, PNG transparan)</option>
+              </select>
+            </div>
+            <div id="spriteBox" class="hidden space-y-1.5 text-xs text-slate-300">
+              <label class="block">Gambar diam (wajib): <input id="fileSpriteIdle" type="file" accept="image/png" class="block text-[11px] mt-1" /></label>
+              <div id="spriteIdleName" class="text-emerald-400 text-[11px]"></div>
+              <label class="block">Gambar mulut terbuka (opsional): <input id="fileSpriteTalk" type="file" accept="image/png" class="block text-[11px] mt-1" /></label>
+              <div id="spriteTalkName" class="text-emerald-400 text-[11px]"></div>
+              <div class="pt-2 mt-1 border-t border-slate-800 space-y-1.5">
+                <label class="block text-xs text-slate-400">Atau buat karakter dengan AI (memakai kartu Gaya gambar, selalu transparan):</label>
+                <textarea id="cfgCharPrompt" rows="2" placeholder="mis. anime girl with ponytail and school uniform" class="w-full px-2 py-1.5 rounded bg-slate-950 border border-slate-800 text-xs text-white"></textarea>
+                <div class="flex gap-2">
+                  <button type="button" id="btnGenChar" class="btn-rose px-2.5 py-1 rounded-lg bg-red-600 hover:bg-red-500 text-xs text-white">Buat karakter</button>
+                  <button type="button" id="btnGenCharTalk" class="btn-violet px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200">Buat versi mulut terbuka</button>
+                </div>
+                <div id="charGenStatus" class="text-[11px] text-slate-400"></div>
+                <div class="flex gap-2">
+                  <img id="charPrevIdle" alt="" class="hidden h-24 rounded" style="background:repeating-conic-gradient(#334155 0% 25%, #1e293b 0% 50%) 50% / 12px 12px" />
+                  <img id="charPrevTalk" alt="" class="hidden h-24 rounded" style="background:repeating-conic-gradient(#334155 0% 25%, #1e293b 0% 50%) 50% / 12px 12px" />
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-500">Pilihan &quot;Karakter Maskot&quot; (boss/girl/robot) hanya berlaku untuk Blok &amp; Stickman.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <label class="opt text-sm"><input id="cfgTextAuto" type="checkbox" checked class="accent-red-500" /> Warna teks otomatis</label>
+              <input id="cfgTextColor" type="color" value="#16161a" class="h-8 w-12 rounded bg-slate-950 border border-slate-800" />
+            </div>
+          </div>
+          <div class="setcard p-3.5 space-y-2.5" style="--c1:#a78bfa">
+            <div class="flex items-center justify-between gap-2"><h3 class="text-xs font-extrabold uppercase tracking-wider text-white">Akses Gemini (di luar Canvas)</h3><span class="badge-pick">BISA DIPILIH</span></div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">API Key Gemini</label>
+              <input id="cfgApiKey" type="password" autocomplete="off" placeholder="kosong = pakai kunci otomatis Canvas" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white font-mono" />
+            </div>
+            <details class="text-xs text-slate-400">
+              <summary class="cursor-pointer">Lanjutan: nama model</summary>
+              <div class="space-y-1.5 mt-2">
+                <label class="block">Model teks/audio <input id="cfgModelText" type="text" class="w-full mt-0.5 px-2 py-1.5 rounded bg-slate-950 border border-slate-800 text-xs text-white font-mono" /></label>
+                <label class="block">Model gambar <input id="cfgModelImage" type="text" class="w-full mt-0.5 px-2 py-1.5 rounded bg-slate-950 border border-slate-800 text-xs text-white font-mono" /></label>
+              </div>
+            </details>
+            <p class="text-[11px] text-slate-500">Kunci hanya disimpan di browser ini (localStorage). Jangan pernah menaruhnya di file yang di-commit ke GitHub.</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div class="setcard p-3.5 space-y-2.5" style="--c1:#34d399">
+            <div class="flex items-center justify-between gap-2"><h3 class="text-xs font-extrabold uppercase tracking-wider text-white">Transisi antar adegan</h3><span class="badge-pick">BISA DIPILIH</span></div>
+            <div class="flex flex-wrap gap-2 text-sm text-slate-200">
+              <label class="opt text-sm"><input class="cfgTrans accent-red-500" type="checkbox" value="fade" checked /> Fade</label>
+              <label class="opt text-sm"><input class="cfgTrans accent-red-500" type="checkbox" value="slide-left" checked /> Geser kiri</label>
+              <label class="opt text-sm"><input class="cfgTrans accent-red-500" type="checkbox" value="slide-up" checked /> Geser atas</label>
+              <label class="opt text-sm"><input class="cfgTrans accent-red-500" type="checkbox" value="zoom" checked /> Zoom</label>
+              <label class="opt text-sm"><input class="cfgTrans accent-red-500" type="checkbox" value="wipe" /> Wipe</label>
+              <label class="opt text-sm"><input class="cfgTrans accent-red-500" type="checkbox" value="none" /> Langsung (tanpa efek)</label>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-slate-400">Urutan:
+              <select id="cfgTransMode" class="pick px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white">
+                <option value="cycle" selected>Bergiliran sesuai daftar</option>
+                <option value="random">Acak (tetap sama tiap render)</option>
+              </select>
+            </div>
+            <p class="text-[11px] text-slate-500">Centang satu saja = semua adegan memakai efek itu. Tidak ada yang dicentang = tanpa transisi.</p>
+          </div>
+          <div class="setcard p-3.5 space-y-2.5" style="--c1:#f472b6">
+            <div class="flex items-center justify-between gap-2"><h3 class="text-xs font-extrabold uppercase tracking-wider text-white">Latar belakang</h3><span class="badge-pick">BISA DIPILIH</span></div>
+            <div class="flex flex-wrap gap-2 text-sm text-slate-200">
+              <label class="opt text-sm"><input class="cfgBg accent-red-500" type="checkbox" value="cream" checked /> Krem berbintik</label>
+              <label class="opt text-sm"><input class="cfgBg accent-red-500" type="checkbox" value="mint" /> Mint</label>
+              <label class="opt text-sm"><input class="cfgBg accent-red-500" type="checkbox" value="sky" /> Biru muda</label>
+              <label class="opt text-sm"><input class="cfgBg accent-red-500" type="checkbox" value="sunset" /> Gradasi senja</label>
+              <label class="opt text-sm"><input class="cfgBg accent-red-500" type="checkbox" value="paper" /> Putih polos</label>
+              <label class="opt text-sm"><input class="cfgBg accent-red-500" type="checkbox" value="grid" /> Kotak-kotak</label>
+              <label class="opt text-sm"><input class="cfgBg accent-red-500" type="checkbox" value="dark" /> Gelap</label>
+              <label class="opt text-sm"><input class="cfgBg accent-red-500" type="checkbox" value="navy" /> Biru tua</label>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 text-xs text-slate-400">
+              <select id="cfgBgMode" class="pick px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white">
+                <option value="single" selected>Pakai satu saja (yang pertama dicentang)</option>
+                <option value="auto">Ganti otomatis antar yang dicentang</option>
+              </select>
+              tiap <input id="cfgBgEvery" type="number" data-numpick="1" min="1" max="20" value="3" class="w-14 px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white" /> adegan
+            </div>
+            <p class="text-[11px] text-slate-500">Warna teks menyesuaikan latar gelap/terang kecuali Anda memilih warna sendiri.</p>
+          </div>
+        </div>
+        <div class="setcard p-3.5 space-y-2.5" style="--c1:#60a5fa">
+          <div class="flex items-center justify-between gap-2"><h3 class="text-xs font-extrabold uppercase tracking-wider text-white">Suara</h3><span class="badge-pick">BISA DIPILIH</span></div>
+          <div class="flex flex-wrap gap-2 text-sm text-slate-200">
+            <label class="opt text-sm"><input id="cfgAudioMusic" type="checkbox" checked class="accent-red-500" /> Musik latar</label>
+            <label class="opt text-sm"><input id="cfgAudioSfx" type="checkbox" checked class="accent-red-500" /> Efek suara (termasuk suara transisi)</label>
+            <label class="opt text-sm"><input id="cfgAudioBlock" type="checkbox" checked class="accent-red-500" /> Bunyi kecil saat visual muncul</label>
+          </div>
+          <p class="text-[11px] text-slate-500">Suara transisi mengikuti jenis transisinya: geser = whoosh, zoom = naik + pop, fade = shimmer, wipe = whoosh turun, tanpa efek = thud. Mematikan &quot;Efek suara&quot; menghapus semuanya.</p>
+        </div>
+        <div class="setcard p-3.5 space-y-2.5" style="--c1:#fb7185">
+          <div class="flex items-center justify-between gap-2"><h3 class="text-xs font-extrabold uppercase tracking-wider text-white">Gaya gambar (untuk blok image)</h3><span class="badge-pick">BISA DIPILIH</span></div>
+          <div class="flex flex-wrap gap-1.5">
+            <button type="button" class="imgPreset px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200" data-art="FLAT_2D_VECTOR" data-bg="CREAM">A. Flat 2D, latar krem</button>
+            <button type="button" class="imgPreset px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200" data-art="PRODUCT_PHOTOGRAPHY" data-bg="TRANSPARENT">B. Foto produk, transparan</button>
+            <button type="button" class="imgPreset px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200" data-art="3D_CARTOON" data-bg="TRANSPARENT">C. Karakter 3D, transparan</button>
+            <button type="button" class="imgPreset px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200" data-art="REALISTIC_PHOTO" data-bg="ENVIRONMENT">D. Foto realistis, lingkungan nyata</button>
+            <button type="button" class="imgPreset px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200" data-art="REALISTIC_MINIATURE" data-bg="AUTO">E. Dunia miniatur</button>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-xs text-slate-400">
+            <label>Gaya
+              <select id="cfgArtStyle" class="pick w-full mt-0.5 px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white">
+                <option value="FLAT_2D_VECTOR" selected>Flat 2D vektor</option>
+                <option value="MODERN_2D_ILLUSTRATION">Ilustrasi 2D modern</option>
+                <option value="EDITORIAL_ILLUSTRATION">Ilustrasi editorial</option>
+                <option value="DOODLE_ART">Doodle gambar tangan</option>
+                <option value="PAPER_CUTOUT">Potongan kertas</option>
+                <option value="REALISTIC_PHOTO">Foto realistis</option>
+                <option value="PRODUCT_PHOTOGRAPHY">Foto produk</option>
+                <option value="3D_CARTOON">Kartun 3D</option>
+                <option value="3D_CLAY">Tanah liat 3D</option>
+                <option value="REALISTIC_MINIATURE">Dunia miniatur</option>
+              </select>
+            </label>
+            <label>Latar
+              <select id="cfgImgBg" class="pick w-full mt-0.5 px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white">
+                <option value="CREAM" selected>Krem polos</option>
+                <option value="TRANSPARENT">Transparan</option>
+                <option value="AUTO">Otomatis</option>
+                <option value="SOLID">Satu warna</option>
+                <option value="STUDIO">Studio</option>
+                <option value="ENVIRONMENT">Lingkungan nyata</option>
+              </select>
+            </label>
+            <label>Rasio
+              <select id="cfgImgRatio" class="pick w-full mt-0.5 px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white">
+                <option value="4:3" selected>4:3 lebar</option>
+                <option value="1:1">1:1 kotak</option>
+                <option value="3:4">3:4 tinggi</option>
+              </select>
+            </label>
+          </div>
+          <p class="text-[11px] text-slate-500">&quot;Transparan&quot; dibuat dengan meminta latar hijau polos lalu menghapusnya otomatis di browser (model gambar jarang menghasilkan transparansi asli). Gaya berlaku untuk gambar baru dan tombol &quot;Buat ulang&quot;.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- LEFT COLUMN: INPUT PANEL (4 cols on desktop) -->
+      <div class="lg:col-span-5 space-y-5">
+        
+        <!-- Input Card -->
+        <div class="rounded-2xl bg-slate-900/90 border border-slate-800/90 p-5 shadow-xl space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-bold text-white flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center text-xs font-extrabold">1</span>
+              Input Narasi (SRT dan/atau MP3)
+            </h2>
+            <span id="inputBadgeStatus" class="text-[11px] px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400">Menunggu Input</span>
+          </div>
+
+          <!-- Optional Topic & Video Folder Row -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-slate-400 mb-1">
+                Topik / Tag <span class="text-slate-500">(opsional, maks 3 kata)</span>
+              </label>
+              <input id="inputTag" type="text" placeholder="Kosong = disimpulkan AI" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-remotionRed" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-400 mb-1">
+                Nama Folder Video <span class="text-slate-500">(opsional)</span>
+              </label>
+              <input id="inputVideoFolder" type="text" placeholder="mis: ai-agent-dasar" value="video-explainer" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white placeholder-slate-600 focus:outline-none focus:border-remotionRed" />
+            </div>
+          </div>
+
+          <!-- File Upload Dropzones: SRT & MP3 -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- SRT File Upload -->
+            <label for="fileSrt" class="cursor-pointer group rounded-xl border border-dashed border-slate-700 hover:border-remotionRed/70 bg-slate-950/60 p-3.5 transition flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-semibold text-slate-200 group-hover:text-white flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  Upload File .SRT
+                </span>
+                <span id="srtFileClear" class="hidden text-[10px] text-red-400 hover:underline">Hapus</span>
+              </div>
+              <p id="srtFileName" class="text-[11px] text-slate-400 truncate">Klik untuk pilih file .srt</p>
+              <input id="fileSrt" type="file" accept=".srt,.txt" class="hidden" />
+            </label>
+
+            <!-- MP3 Audio Upload -->
+            <label for="fileMp3" class="cursor-pointer group rounded-xl border border-dashed border-slate-700 hover:border-remotionRed/70 bg-slate-950/60 p-3.5 transition flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-semibold text-slate-200 group-hover:text-white flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+                  Upload Audio .MP3
+                </span>
+                <span id="mp3FileClear" class="hidden text-[10px] text-red-400 hover:underline">Hapus</span>
+              </div>
+              <p id="mp3FileName" class="text-[11px] text-slate-400 truncate">Klik untuk pilih .mp3 / .wav</p>
+              <input id="fileMp3" type="file" accept="audio/*,.mp3,.wav,.m4a" class="hidden" />
+            </label>
+          </div>
+
+          <!-- Audio Player Preview if MP3 uploaded -->
+          <div id="audioPreviewContainer" class="hidden rounded-xl bg-slate-950 border border-slate-800 p-3 space-y-1.5">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-emerald-400 font-medium flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                Audio Narasi Siap
+              </span>
+              <span id="audioDurationLabel" class="text-slate-400 font-mono text-[11px]">0.0s</span>
+            </div>
+            <audio id="audioElement" controls class="w-full h-8"></audio>
+          </div>
+
+          <!-- SRT Textarea -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="srtTextarea" class="text-xs font-medium text-slate-300">
+                Tempel Isi SRT <span class="text-slate-500">(Kosongkan bila hanya unggah MP3)</span>
+              </label>
+              <button id="btnClearSrt" type="button" class="text-[11px] text-slate-400 hover:text-slate-200">Bersihkan</button>
+            </div>
+            <textarea id="srtTextarea" rows="10" placeholder="1&#10;00:00:00,000 --> 00:00:03,200&#10;Kebanyakan orang pakai AI cuma buat ngobrol biasa.&#10;&#10;2&#10;00:00:03,200 --> 00:00:06,800&#10;Padahal sekarang ada AI Agent yang bisa kerja sendiri..." class="w-full p-3.5 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-remotionRed leading-relaxed"></textarea>
+            <div class="flex items-center justify-between mt-1.5 text-[11px] text-slate-400">
+              <span id="srtStatsLabel">0 entri SRT Â· 0 kata</span>
+              <span>Kata & waktu SRT dijaga 100% utuh</span>
+            </div>
+          </div>
+
+          <!-- Gambar sendiri (screenshot / foto) -->
+          <div class="setcard p-3.5 space-y-2.5" style="--c1:#f472b6">
+            <div class="flex items-center justify-between gap-2"><h3 class="text-xs font-extrabold uppercase tracking-wider text-white">Gambar sendiri (screenshot / foto)</h3><span class="badge-pick">OPSIONAL</span></div>
+            <p class="hint">Cocok untuk video tutorial. Tambahkan gambar Anda, lalu tulis <b>kata pemicu</b>: kata dari skrip/SRT yang, saat diucapkan, memunculkan gambar itu. Gambar buatan AI tetap dibuat otomatis di adegan lain. Tips: pilih kata yang diucapkan tepat saat langkah itu ditunjukkan (mis. &quot;klik&quot;, &quot;menu&quot;, &quot;pengaturan&quot;).</p>
+            <label class="btn-rose inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs cursor-pointer">+ Tambah gambar
+              <input id="fileManualImg" type="file" accept="image/*" multiple class="hidden" />
+            </label>
+            <div id="manualList" class="space-y-2"></div>
+          </div>
+
+          <!-- Action Button -->
+          <button id="btnProcess" type="button" class="btn-glow w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#e5252a] to-red-600 hover:from-red-600 hover:to-red-500 text-white font-bold text-sm shadow-lg shadow-red-900/40 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Susun Scenes & Buat Gambar Sekarang</span>
+          </button>
+
+          <!-- Pipeline Step Progress Tracker -->
+          <div id="pipelineProgressBox" class="hidden rounded-xl bg-slate-950 border border-slate-800 p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span id="progressStepTitle" class="text-xs font-semibold text-amber-400 flex items-center gap-2">
+                <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                Memproses Alur Kerja...
+              </span>
+              <span id="progressStepBadge" class="text-[11px] font-mono text-slate-400">Langkah 0/6</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+              <div id="progressBarFill" class="h-full bg-gradient-to-r from-remotionRed to-amber-500 transition-all duration-300" style="width: 10%"></div>
+            </div>
+            <p id="progressSubtext" class="text-[11px] text-slate-400">Memeriksa sumber kata dan waktu...</p>
+          </div>
+
+          <!-- Error Alert Box (No browser alert) -->
+          <div id="errorBox" class="hidden rounded-xl bg-red-950/60 border border-red-500/40 p-3.5 text-xs text-red-200 flex items-start justify-between gap-2">
+            <div class="space-y-1">
+              <p class="font-bold text-red-300">Perhatian:</p>
+              <p id="errorText"></p>
+            </div>
+            <button id="btnCloseError" class="text-red-400 hover:text-white">&times;</button>
+          </div>
+        </div>
+
+        <!-- Interactive 9:16 Stage Simulator & Self-Check Card -->
+        <div class="rounded-2xl bg-slate-900/90 border border-slate-800/90 p-5 shadow-xl space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+              Preview Visual 9:16 & Pemeriksaan Diri (Langkah 6)
+            </h3>
+            <span id="sceneCounterLabel" class="text-xs font-mono text-slate-400">0/0 adegan</span>
+          </div>
+
+          <!-- 9:16 Phone Frame Preview -->
+          <div class="flex flex-col sm:flex-row gap-4 items-center">
+            <div class="w-[230px] h-[408px] shrink-0 rounded-[26px] border-4 border-slate-800 shadow-2xl overflow-hidden stage-preview-bg text-slate-900 flex flex-col justify-between p-3.5 relative select-none">
+              <!-- Top Brand & Tag Bar -->
+              <div class="flex items-center justify-between gap-1 text-[10px] font-bold">
+                <span id="prevBrand" class="px-2 py-0.5 rounded-full bg-slate-900 text-white truncate max-w-[105px]">NamaBrandSaya</span>
+                <span id="prevTag" class="px-2 py-0.5 rounded-full bg-red-100 text-[#e5252a] border border-red-200 truncate max-w-[100px]">topik Â· video</span>
+              </div>
+
+              <!-- Title Area -->
+              <div class="mt-2 text-center">
+                <p id="prevSmallText" class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide min-h-[14px]"></p>
+                <h4 id="prevTitleText" class="text-sm font-extrabold leading-snug text-slate-900">
+                  Klik <span class="text-[#e5252a] underline decoration-2">Muat Contoh SRT</span> atau masukkan narasi Anda
+                </h4>
+              </div>
+
+              <!-- Middle Stage Blocks Area -->
+              <div id="prevStageContainer" class="my-auto py-2 flex flex-col gap-2 justify-center min-h-[175px]">
+                <div class="rounded-xl border border-dashed border-slate-300 p-4 text-center text-[11px] text-slate-500">
+                  Visual blok (<code class="font-mono">window</code>, <code class="font-mono">compare</code>, <code class="font-mono">tree</code>, <code class="font-mono">image</code>, dll.) akan tampil di sini
+                </div>
+              </div>
+
+              <!-- Bottom Mascot & Time Bar -->
+              <div class="flex items-end justify-between min-h-[48px] pt-1 border-t border-slate-300/60">
+                <div id="prevMascotSlot" class="flex items-center gap-1.5 text-[10px] font-bold text-slate-700">
+                  <!-- Rendered dynamically -->
+                </div>
+                <div class="text-[10px] font-mono text-slate-500" id="prevTimeSlot">start: 0s</div>
+              </div>
+            </div>
+
+            <!-- Controls & Langkah 6 Self-Check List -->
+            <div class="flex-1 w-full space-y-3">
+              <!-- Scene Scrubber Controls -->
+              <div class="flex items-center justify-between gap-2 bg-slate-950 p-2 rounded-xl border border-slate-800">
+                <button id="btnPrevScene" type="button" class="btn-cyan px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 disabled:opacity-40">&larr; Sblm</button>
+                <span id="scrubberSceneIndex" class="text-xs font-mono text-slate-300">Adegan -</span>
+                <button id="btnNextScene" type="button" class="btn-cyan px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 disabled:opacity-40">Lanjut &rarr;</button>
+              </div>
+
+              <!-- Checklist Langkah 6 -->
+              <div class="rounded-xl bg-slate-950 border border-slate-800 p-3 space-y-1.5">
+                <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Status Periksa Diri (Langkah 6)</div>
+                <ul id="selfCheckList" class="space-y-1.5 text-[11px] text-slate-400">
+                  <li class="flex items-center gap-2"><span class="text-slate-600">&#9679;</span> <span>a. Kata title == seluruh kata SRT utuh</span></li>
+                  <li class="flex items-center gap-2"><span class="text-slate-600">&#9679;</span> <span>b. Waktu <code class="text-slate-300">start</code> mulai 0 & naik berurutan</span></li>
+                  <li class="flex items-center gap-2"><span class="text-slate-600">&#9679;</span> <span>c. Semua <code class="text-slate-300">at</code> kata ada di <code class="text-slate-300">title</code> adegan</span></li>
+                  <li class="flex items-center gap-2"><span class="text-slate-600">&#9679;</span> <span>d. Nilai <code class="text-slate-300">small</code> &le; jumlah kata title</span></li>
+                  <li class="flex items-center gap-2"><span class="text-slate-600">&#9679;</span> <span>e. Skema blok & aturan maskot patuh 100%</span></li>
+                  <li class="flex items-center gap-2"><span class="text-slate-600">&#9679;</span> <span>f. Jumlah gambar proporsional durasi (img01, img02, dst.)</span></li>
+                  <li class="flex items-center gap-2"><span class="text-slate-600">&#9679;</span> <span>g. JSON valid tanpa koma sisa / komentar</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: STRICT 5-PART OUTPUT PANEL (7 cols on desktop) -->
+      <div class="lg:col-span-7 space-y-5">
+        
+        <!-- Top Action Bar for Exports -->
+        <div class="rounded-2xl bg-slate-900/90 border border-slate-800/90 p-4 sm:p-5 shadow-xl flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-sm font-bold text-white flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-extrabold">2</span>
+              Keluaran Siap Pakai (Urutan Tetap 1â€“5)
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Langsung salin masing-masing blok atau unduh bundel ZIP folder <code id="zipFolderHint" class="text-slate-300">public/video-explainer/</code></p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btnDownloadZip" type="button" disabled class="btn-emerald px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs shadow-lg shadow-emerald-950/50 transition flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              Unduh Paket .ZIP (GitHub Ready)
+            </button>
+          </div>
+        </div>
+
+        <!-- OUTPUT 1: Satu Kalimat Ringkasan -->
+        <div class="rounded-2xl bg-slate-900/90 border border-slate-800/90 p-5 shadow-xl space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-remotionRed">1) Ringkasan Satu Kalimat</span>
+            <button id="btnCopySummary" type="button" class="text-xs text-slate-400 hover:text-white">Salin</button>
+          </div>
+          <p id="outSummaryText" class="text-sm sm:text-base font-semibold text-white bg-slate-950 border border-slate-800 rounded-xl p-3.5">
+            Belum ada keluaran. Masukkan SRT atau MP3 di panel kiri lalu klik "Susun Scenes & Buat Gambar Sekarang".
+          </p>
+        </div>
+
+        <!-- OUTPUT 1b: Visi Sutradara & Visual Intent (Story Arc, Metafora, & Pacing) -->
+        <div id="outDirectorSection" class="hidden rounded-2xl bg-slate-900/90 border border-amber-500/30 p-5 shadow-xl space-y-3 bg-gradient-to-b from-amber-950/20 to-slate-900/90">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                Visi Sutradara & Visual Intent
+              </span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 font-medium">Storyboard Mindset</span>
+            </div>
+            <button id="btnToggleDirector" type="button" class="text-xs text-slate-400 hover:text-amber-300 transition">Sembunyikan / Buka</button>
+          </div>
+
+          <div id="outDirectorBody" class="space-y-3 text-xs">
+            <!-- Story Arc -->
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+              <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-rose-400 block mb-1">1. Hook</span>
+                <p id="dirHook" class="text-slate-300 text-[11px] leading-relaxed">-</p>
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-400 block mb-1">2. Problem</span>
+                <p id="dirProblem" class="text-slate-300 text-[11px] leading-relaxed">-</p>
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 block mb-1">3. Solution</span>
+                <p id="dirSolution" class="text-slate-300 text-[11px] leading-relaxed">-</p>
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-cyan-400 block mb-1">4. Payoff / CTA</span>
+                <p id="dirCta" class="text-slate-300 text-[11px] leading-relaxed">-</p>
+              </div>
+            </div>
+
+            <!-- Visual Metaphor & Visual Anchor -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+              <div class="p-3 rounded-xl bg-slate-950 border border-slate-800/80 space-y-1">
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-purple-300 flex items-center gap-1">
+                  &#10024; Metafora Visual Utama
+                </span>
+                <p id="dirMetaphor" class="text-slate-200 text-xs font-medium leading-relaxed">-</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-950 border border-slate-800/80 space-y-1">
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-blue-300 flex items-center gap-1">
+                  &#128279; Pengikat Visual (Visual Anchor)
+                </span>
+                <p id="dirAnchor" class="text-slate-200 text-xs font-medium leading-relaxed">-</p>
+              </div>
+            </div>
+
+            <!-- Mood & Pacing -->
+            <div class="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/60 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+              <div><span class="text-slate-400">Suasana (Mood):</span> <span id="dirMood" class="text-slate-200 font-medium">-</span></div>
+              <div><span class="text-slate-400">Strategi Tempo:</span> <span id="dirPacing" class="text-slate-200 font-medium">-</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- OUTPUT 2: voiceover.srt (Otomatis terbuka penuh bila input hanya MP3, atau bisa dibuka kapan saja) -->
+        <div id="outSrtSection" class="rounded-2xl bg-slate-900/90 border border-slate-800/90 p-5 shadow-xl space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-remotionRed">2) voiceover.srt</span>
+              <span id="srtSourceBadge" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">Sumber: Input SRT</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="btnCopySrtOut" type="button" class="btn-cyan text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200">Salin blok srt</button>
+              <button id="btnDownloadSrtOut" type="button" class="btn-emerald text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-emerald-400 font-medium">Unduh voiceover.srt</button>
+            </div>
+          </div>
+          <p id="mp3SrtNotice" class="hidden text-xs text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2">
+            Catatan: Waktu pada <code class="font-mono">voiceover.srt</code> ini merupakan hasil transkripsi perkiraan dari audio MP3 dan perlu dicek kembali.
+          </p>
+          <pre class="w-full max-h-56 overflow-auto p-3.5 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-200 leading-relaxed"><code id="outSrtCode">// voiceover.srt akan tampil di sini</code></pre>
+        </div>
+
+        <!-- OUTPUT 3: Gambar-gambar yang dibuat (img01.png, ...) + Prompt Seragam -->
+        <div class="rounded-2xl bg-slate-900/90 border border-slate-800/90 p-5 shadow-xl space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-remotionRed">3) Gambar Adegan (<code class="font-mono">img01.png</code>, dst.)</span>
+              <p class="text-[11px] text-slate-400">Rasio 4:3 landscape Â· Vektor datar garis tebal bersih Â· Palet hangat krem/#e5252a/#3b6fd8/#1f9d8a Â· Tanpa teks</p>
+            </div>
+            <span id="outImageCountBadge" class="text-xs font-mono px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300">0 gambar</span>
+          </div>
+
+          <div id="outImagesContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="col-span-full rounded-xl bg-slate-950 border border-slate-800 p-6 text-center text-xs text-slate-500">
+              Gambar otomatis dibuat untuk adegan yang memakai blok <code class="text-slate-400">"image"</code> (proporsional durasi: ~4-7 gambar untuk 30 detik, ~8-16 gambar untuk 60 detik).
+            </div>
+          </div>
+        </div>
+
+        <!-- OUTPUT 4: scenes.src.json -->
+        <div class="rounded-2xl bg-slate-900/90 border border-slate-800/90 p-5 shadow-xl space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-remotionRed">4) scenes.src.json</span>
+              <span id="jsonValidBadge" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">Menunggu</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="btnFormatJson" type="button" class="btn-violet text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">Format Rapi / Minify</button>
+              <button id="btnCopyJsonOut" type="button" class="btn-cyan text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200">Salin JSON</button>
+              <button id="btnDownloadJsonOut" type="button" class="btn-rose text-xs px-2.5 py-1 rounded-lg bg-remotionRed hover:bg-red-600 text-white font-semibold">Unduh scenes.src.json</button>
+            </div>
+          </div>
+          <textarea id="outJsonTextarea" rows="14" spellcheck="false" class="w-full p-3.5 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-emerald-300 focus:outline-none focus:border-remotionRed leading-relaxed" placeholder='{"style":"explainer","brand":"NamaBrandSaya", ...}'></textarea>
+        </div>
+
+        <!-- OUTPUT 5: Instruksi Singkat (Maks 5 Baris) -->
+        <div class="rounded-2xl bg-slate-900/90 border border-slate-800/90 p-5 shadow-xl space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-remotionRed">5) Instruksi Singkat Deployment GitHub</span>
+            <button id="btnCopyInstructions" type="button" class="text-xs text-slate-400 hover:text-white">Salin</button>
+          </div>
+          <pre id="outInstructionsText" class="w-full p-3.5 rounded-xl bg-slate-950 border border-slate-800 font-sans text-xs text-slate-200 whitespace-pre-wrap leading-relaxed">Buat folder public/video-explainer/ di GitHub, upload: voiceover.mp3, voiceover.srt, scenes.src.json, dan folder img/ berisi gambar (nama file harus persis). Lalu jalankan Action Render Video.</pre>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs font-semibold text-white shadow-2xl flex items-center gap-2">
+    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+    <span id="toastText">Berhasil disalin!</span>
+  </div>
+
+  <script>
+    // =========================================================================
+    // STATE & KONFIGURASI
+    // =========================================================================
+    let apiKey = ""; // kosong = kunci otomatis dari runtime Canvas Gemini. Di luar Canvas: isi lewat Pengaturan & Tampilan (disimpan di browser Anda saja)
+    let MODEL_TEXT = "gemini-3-flash-preview";
+    let MODEL_IMAGE = "gemini-3.1-flash-image";
+    let MODEL_IMAGE_LITE = "gemini-3.1-flash-lite-image";
+    let currentTopic = "topik ini";
+    let manualImages = []; // gambar sendiri: { id, origName, dataUrl, ext, w, h, hBlock, trigger, nth, caption, fit, hold, status, fileName, src }
+    let charSprites = { idle: null, talk: null }; // { dataUrl, fileName } untuk karakter sprite (PNG transparan)
+    try {
+      apiKey = localStorage.getItem('gj_apikey') || "";
+      MODEL_TEXT = localStorage.getItem('gj_model_text') || MODEL_TEXT;
+      MODEL_IMAGE = localStorage.getItem('gj_model_image') || MODEL_IMAGE;
+    } catch (e) { /* localStorage diblokir: abaikan */ }
+    let uploadedMp3File = null;
+    let uploadedMp3Base64 = null;
+    let uploadedMp3MimeType = "audio/mp3";
+    let inputMode = "none"; // "srt", "mp3", "both"
+    let currentScenesJson = null;
+    let currentSrtString = "";
+    let generatedImages = []; // Array of { fileName: 'img01.png', srcPath: 'img/img01.png', caption: '', prompt: '', dataUrl: '' }
+    let currentDirectorVision = null; // Visi Sutradara & Visual Intent: storyArc, visualTheme, keyMetaphors
+    let currentPreviewIndex = 0;
+    let isPrettyJson = true;
+
+    const DEMO_SRT = `1
+00:00:00,000 --> 00:00:03,100
+Satu untuk ngobrol biasa dan satu lagi untuk kerja nyata.
+
+2
+00:00:03,100 --> 00:00:06,400
+Bayangkan dapur restoran yang sibuk setiap malam.
+
+3
+00:00:06,400 --> 00:00:09,800
+Kalau chatbot biasa cuma kasih resep masakan di layar.
+
+4
+00:00:09,800 --> 00:00:13,200
+Sedangkan AI Agent langsung merapikan puluhan file berantakan.
+
+5
+00:00:13,200 --> 00:00:16,500
+Untuk hal penting ia bertanya dulu sebelum menghapus data.
+
+6
+00:00:16,500 --> 00:00:19,500
+Hasilnya delapan puluh tujuh persen waktu kerja bisa hemat.
+
+7
+00:00:19,500 --> 00:00:22,200
+Mau coba pasang sendiri sekarang?`;
+
+    // =========================================================================
+    // DOM ELEMENTS
+    // =========================================================================
+    const el = {
+      btnLoadDemo: document.getElementById('btnLoadDemo'),
+      btnToggleSettings: document.getElementById('btnToggleSettings'),
+      settingsPanel: document.getElementById('settingsPanel'),
+      cfgBrand: document.getElementById('cfgBrand'),
+      cfgCta: document.getElementById('cfgCta'),
+      cfgChar: document.getElementById('cfgChar'),
+      cfgAccent: document.getElementById('cfgAccent'),
+      cfgImageMode: document.getElementById('cfgImageMode'),
+      inputTag: document.getElementById('inputTag'),
+      inputVideoFolder: document.getElementById('inputVideoFolder'),
+      fileSrt: document.getElementById('fileSrt'),
+      srtFileName: document.getElementById('srtFileName'),
+      srtFileClear: document.getElementById('srtFileClear'),
+      fileMp3: document.getElementById('fileMp3'),
+      mp3FileName: document.getElementById('mp3FileName'),
+      mp3FileClear: document.getElementById('mp3FileClear'),
+      audioPreviewContainer: document.getElementById('audioPreviewContainer'),
+      audioElement: document.getElementById('audioElement'),
+      audioDurationLabel: document.getElementById('audioDurationLabel'),
+      srtTextarea: document.getElementById('srtTextarea'),
+      btnClearSrt: document.getElementById('btnClearSrt'),
+      srtStatsLabel: document.getElementById('srtStatsLabel'),
+      inputBadgeStatus: document.getElementById('inputBadgeStatus'),
+      btnProcess: document.getElementById('btnProcess'),
+      pipelineProgressBox: document.getElementById('pipelineProgressBox'),
+      progressStepTitle: document.getElementById('progressStepTitle'),
+      progressStepBadge: document.getElementById('progressStepBadge'),
+      progressBarFill: document.getElementById('progressBarFill'),
+      progressSubtext: document.getElementById('progressSubtext'),
+      errorBox: document.getElementById('errorBox'),
+      errorText: document.getElementById('errorText'),
+      btnCloseError: document.getElementById('btnCloseError'),
+      // Preview & Self-check
+      sceneCounterLabel: document.getElementById('sceneCounterLabel'),
+      prevBrand: document.getElementById('prevBrand'),
+      prevTag: document.getElementById('prevTag'),
+      prevSmallText: document.getElementById('prevSmallText'),
+      prevTitleText: document.getElementById('prevTitleText'),
+      prevStageContainer: document.getElementById('prevStageContainer'),
+      prevMascotSlot: document.getElementById('prevMascotSlot'),
+      prevTimeSlot: document.getElementById('prevTimeSlot'),
+      btnPrevScene: document.getElementById('btnPrevScene'),
+      btnNextScene: document.getElementById('btnNextScene'),
+      scrubberSceneIndex: document.getElementById('scrubberSceneIndex'),
+      selfCheckList: document.getElementById('selfCheckList'),
+      // Outputs 1-5
+      btnDownloadZip: document.getElementById('btnDownloadZip'),
+      zipFolderHint: document.getElementById('zipFolderHint'),
+      outSummaryText: document.getElementById('outSummaryText'),
+      btnCopySummary: document.getElementById('btnCopySummary'),
+      srtSourceBadge: document.getElementById('srtSourceBadge'),
+      mp3SrtNotice: document.getElementById('mp3SrtNotice'),
+      outSrtCode: document.getElementById('outSrtCode'),
+      btnCopySrtOut: document.getElementById('btnCopySrtOut'),
+      btnDownloadSrtOut: document.getElementById('btnDownloadSrtOut'),
+      outImageCountBadge: document.getElementById('outImageCountBadge'),
+      outImagesContainer: document.getElementById('outImagesContainer'),
+      jsonValidBadge: document.getElementById('jsonValidBadge'),
+      outJsonTextarea: document.getElementById('outJsonTextarea'),
+      btnFormatJson: document.getElementById('btnFormatJson'),
+      btnCopyJsonOut: document.getElementById('btnCopyJsonOut'),
+      btnDownloadJsonOut: document.getElementById('btnDownloadJsonOut'),
+      outInstructionsText: document.getElementById('outInstructionsText'),
+      btnCopyInstructions: document.getElementById('btnCopyInstructions'),
+      toast: document.getElementById('toast'),
+      toastText: document.getElementById('toastText'),
+    };
+
+    // =========================================================================
+    // UTILITY FUNCTIONS
+    // =========================================================================
+    function showToast(msg) {
+      el.toastText.textContent = msg;
+      el.toast.classList.remove('hidden');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => el.toast.classList.add('hidden'), 2600);
+    }
+
+    function showError(msg) {
+      el.errorText.textContent = msg;
+      el.errorBox.classList.remove('hidden');
+    }
+
+    function hideError() {
+      el.errorBox.classList.add('hidden');
+    }
+
+    function copyTextToClipboard(text, label = "Teks") {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast(`${label} berhasil disalin!`);
+      } catch (err) {
+        showToast(`Gagal menyalin ${label}`);
+      }
+      document.body.removeChild(ta);
+    }
+
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function setProgress(stepNum, title, subtext, percent) {
+      el.pipelineProgressBox.classList.remove('hidden');
+      el.progressStepBadge.textContent = `Langkah ${stepNum}/6`;
+      el.progressStepTitle.innerHTML = `
+        <svg class="w-4 h-4 animate-spin text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        <span>${title}</span>`;
+      el.progressSubtext.textContent = subtext;
+      el.progressBarFill.style.width = `${percent}%`;
+    }
+
+    // =========================================================================
+    // SRT PARSER & WORD TOKENIZER
+    // =========================================================================
+    function parseTimecodeToSeconds(tc) {
+      if (!tc) return 0;
+      const clean = tc.trim().replace(',', '.');
+      const parts = clean.split(':');
+      if (parts.length === 3) {
+        const h = parseFloat(parts[0]) || 0;
+        const m = parseFloat(parts[1]) || 0;
+        const s = parseFloat(parts[2]) || 0;
+        return Math.round((h * 3600 + m * 60 + s) * 10) / 10;
+      }
+      return 0;
+    }
+
+    function parseSrt(srtText) {
+      if (!srtText || !srtText.trim()) return [];
+      const normalized = srtText.replace(/\r\n/g, '\n').trim();
+      const blocks = normalized.split(/\n\s*\n/);
+      const entries = [];
+
+      for (const block of blocks) {
+        const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+        if (lines.length < 2) continue;
+
+        let timeLineIdx = 0;
+        if (/^\d+$/.test(lines[0]) && lines[1] && lines[1].includes('-->')) {
+          timeLineIdx = 1;
+        } else if (lines[0].includes('-->')) {
+          timeLineIdx = 0;
+        } else {
+          continue;
+        }
+
+        const timeMatch = lines[timeLineIdx].match(/(\d{1,2}:\d{2}:\d{2}[,.]\d{1,3})\s*-->\s*(\d{1,2}:\d{2}:\d{2}[,.]\d{1,3})/);
+        if (!timeMatch) continue;
+
+        const startSec = parseTimecodeToSeconds(timeMatch[1]);
+        const endSec = parseTimecodeToSeconds(timeMatch[2]);
+        const textLines = lines.slice(timeLineIdx + 1);
+        const text = textLines.join(' ').replace(/\s+/g, ' ').trim();
+        if (text) {
+          entries.push({
+            index: entries.length + 1,
+            start: startSec,
+            end: endSec,
+            text
+          });
+        }
+      }
+      return entries;
+    }
+
+    function stripStars(str) {
+      return (str || '').replace(/\*/g, '').replace(/\s+/g, ' ').trim();
+    }
+
+    function getWordsArray(str) {
+      const cleaned = stripStars(str);
+      if (!cleaned) return [];
+      return cleaned.split(/\s+/).filter(Boolean);
+    }
+
+    function normalizeWordForCompare(w) {
+      return (w || '').replace(/\*/g, '').trim();
+    }
+
+    function updateInputStatusUI() {
+      const srtVal = el.srtTextarea.value.trim();
+      const entries = parseSrt(srtVal);
+      const allWords = entries.flatMap(e => getWordsArray(e.text));
+      el.srtStatsLabel.textContent = `${entries.length} entri SRT Â· ${allWords.length} kata`;
+
+      const hasSrt = entries.length > 0;
+      const hasMp3 = !!uploadedMp3Base64;
+
+      if (hasSrt && hasMp3) {
+        inputMode = "both";
+        el.inputBadgeStatus.textContent = "Mode: SRT + MP3 (SRT Utama)";
+        el.inputBadgeStatus.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+      } else if (hasSrt) {
+        inputMode = "srt";
+        el.inputBadgeStatus.textContent = "Mode: SRT Siap";
+        el.inputBadgeStatus.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30";
+      } else if (hasMp3) {
+        inputMode = "mp3";
+        el.inputBadgeStatus.textContent = "Mode: Hanya MP3 (Auto-SRT)";
+        el.inputBadgeStatus.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30";
+      } else {
+        inputMode = "none";
+        el.inputBadgeStatus.textContent = "Menunggu Input";
+        el.inputBadgeStatus.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400";
+      }
+    }
+
+    // =========================================================================
+    // GEMINI API CALLS WITH EXPONENTIAL BACKOFF
+    // =========================================================================
+    async function fetchWithRetry(url, options, maxRetries = 4) {
+      const delays = [1000, 2000, 4000, 8000];
+      let lastError = null;
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+          const res = await fetch(url, options);
+          if (!res.ok) {
+            const errText = await res.text();
+            const httpErr = new Error(`HTTP ${res.status}: ${errText.slice(0, 200)}`);
+            httpErr.noRetry = [400, 401, 403, 404].includes(res.status);
+            throw httpErr;
+          }
+          return await res.json();
+        } catch (err) {
+          lastError = err;
+          if (err && err.noRetry) break;
+          if (attempt < maxRetries) {
+            await new Promise(r => setTimeout(r, delays[attempt]));
+          }
+        }
+      }
+      throw lastError;
+    }
+
+    // LANGKAH 0 (Khusus jika input HANYA MP3): Transkripsi Audio -> voiceover.srt
+    async function transcribeMp3ToSrt(base64Audio, mimeType) {
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_TEXT}:generateContent?key=${apiKey}`;
+      const systemPrompt = `Kamu adalah transkriber audio profesional untuk pipeline video vertikal Remotion 9:16.
+Tugasmu:
+1. Transkripsikan audio persis seperti diucapkan (kata santai/slang jangan dibakukan).
+2. Buat format SRT yang valid dengan baris pendek (maks 2 baris teks per entri, tiap entri berdurasi 2-5 detik, sekitar 4-12 kata per entri).
+3. Waktu setepat mungkin sampai 0,1 detik (format HH:MM:SS,mmm --> HH:MM:SS,mmm). Entri pertama mulai dari 00:00:00,000.
+4. Keluarkan HANYA isi file SRT murni tanpa blok markdown, tanpa penjelasan tambahan.`;
+
+      const payload = {
+        contents: [{
+          role: "user",
+          parts: [
+            { text: "Transkripsikan audio narasi ini menjadi format SRT sesuai aturan." },
+            { inlineData: { mimeType: mimeType || "audio/mp3", data: base64Audio } }
+          ]
+        }],
+        systemInstruction: { parts: [{ text: systemPrompt }] }
+      };
+
+      const result = await fetchWithRetry(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const rawText = result?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      return rawText.replace(/```srt/gi, '').replace(/```/g, '').trim();
+    }
+
+    // =========================================================================
+    // LANGKAH 1: ANALISIS SUTRADARA & VISUAL INTENT (STORY ARC, METAFORA, PACING)
+    // =========================================================================
+    async function analyzeDirectorVision(srtEntries, settings) {
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_TEXT}:generateContent?key=${apiKey}`;
+      const fullText = srtEntries.map(e => e.text).join(' ');
+      const activeArtStyle = (settings.imageStyle && settings.imageStyle.artStyle) || 'FLAT_2D_VECTOR';
+
+      const directorSystemPrompt = `Kamu adalah seorang Sutradara Kreatif & Art Director kelas dunia untuk video vertikal 9:16 explainer (storytelling kuat, visual metaforis, tempo dinamis).
+Tugasmu adalah menganalisis transkrip narasi sebelum adegan dan visual diproduksi.
+Tujuan: Mengubah narasi menjadi alur visual yang kaya makna, tempo pas dengan yang diucapkan, dan memiliki kesinambungan visual (visual anchor).
+
+ATURAN SUTRADARA:
+1. "storyArc":
+   - hook: Kalimat pembuka / pemantik rasa penasaran penonton di 3 detik pertama.
+   - problem: Inti konflik, kerumitan, atau situasi awal yang ingin diubah.
+   - solution: Titik pencerahan atau solusi utama yang ditawarkan narasi.
+   - cta: Puncak pesan / ajakan bertindak di penutup.
+2. "visualTheme":
+   - coreMetaphor: Metafora visual utama video (hindari gambar harfiah yang klise! Contoh: daripada gambar tumpukan uang untuk 'keuntungan', gunakan 'tunas pohon yang menembus lantai beton' atau 'perahu kertas melaju di air jernih').
+   - visualAnchor: Subjek / objek / elemen ikonik berulang agar visual adegan-adegan terasa satu dunia (misal: 'seorang profesional berjaket biru dengan buku catatan oranye', atau 'robot asisten dengan lampu indikator cyan').
+   - mood: Emosi visual yang ingin dibangun (misal: 'awalnya sumpek & rumit, berubah menjadi terang, lega, dan modern').
+   - pacingStrategy: Strategi tempo kemunculan visual (kapan visual butuh jeda fokus, kapan bertempo cepat).
+3. "keyMetaphors": Daftar 2-4 ide visual metaforis untuk konsep penting dalam naskah beserta "targetKeyword" (kata kunci penekanan/punchline saat visual tersebut harus muncul diucapkan).
+
+Keluarkan HANYA format JSON murni:
+{
+  "summaryTopic": "topik singkat 3-6 kata bahasa Indonesia",
+  "storyArc": {
+    "hook": "...",
+    "problem": "...",
+    "solution": "...",
+    "cta": "..."
+  },
+  "visualTheme": {
+    "coreMetaphor": "...",
+    "visualAnchor": "...",
+    "mood": "...",
+    "pacingStrategy": "..."
+  },
+  "keyMetaphors": [
+    { "triggerConcept": "...", "metaphorIdea": "...", "targetKeyword": "..." }
+  ]
+}`;
+
+      try {
+        const payload = {
+          contents: [{ role: "user", parts: [{ text: `Transkrip Narasi Utuh:\n"${fullText}"\n\nGaya Seni Terpilih: ${activeArtStyle}\nKarakter: ${settings.char || 'boss'}\n\nRancang visi penyutradaraan dan visual intent lengkap dalam format JSON.` }] }],
+          systemInstruction: { parts: [{ text: directorSystemPrompt }] },
+          generationConfig: { responseMimeType: "application/json" }
+        };
+        const result = await fetchWithRetry(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }, 2);
+        const rawJson = result?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+        return JSON.parse(rawJson);
+      } catch (err) {
+        console.warn("Director pass fallback aktif:", err);
+        return {
+          summaryTopic: settings.tag || "Eksplanasi Narasi",
+          storyArc: {
+            hook: "Membuka topik dengan memancing rasa ingin tahu",
+            problem: "Mengeksplorasi kendala atau situasi utama naskah",
+            solution: "Memberikan kejelasan solusi yang mudah dimengerti",
+            cta: settings.cta || "Ajakan bertindak di penutup narasi"
+          },
+          visualTheme: {
+            coreMetaphor: "Visualisasi konsep abstrak ke objek konkret yang dinamis",
+            visualAnchor: `Karakter ${settings.char || 'utama'} dengan palet warna yang serasi`,
+            mood: "Edukasi visual modern, segar, dan berenergi",
+            pacingStrategy: "Transisi lincah mengikuti jeda kalimat"
+          },
+          keyMetaphors: []
+        };
+      }
+    }
+
+    // =========================================================================
+    // LANGKAH 2: PENYUSUNAN ADEGAN & PROMPT (STORYBOARD BERDASARKAN VISI SUTRADARA)
+    // =========================================================================
+    async function generateScenesPlanWithAI(srtEntries, settings, directorVision) {
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_TEXT}:generateContent?key=${apiKey}`;
+
+      // Build word-level timeline reference from SRT entries so AI preserves 100% of words & accurate start times
+      const wordTimeline = [];
+      srtEntries.forEach(entry => {
+        const words = getWordsArray(entry.text);
+        const dur = Math.max(0.5, entry.end - entry.start);
+        words.forEach((w, idx) => {
+          const wTime = Math.round((entry.start + (idx / words.length) * dur) * 10) / 10;
+          wordTimeline.push({ word: w, time: wTime });
+        });
+      });
+
+      const fullSrtTranscript = srtEntries.map(e => e.text).join(' ');
+
+      const sArc = directorVision?.storyArc || {};
+      const vTh = directorVision?.visualTheme || {};
+      const keyM = (directorVision?.keyMetaphors || []).map(m => `- Untuk "${m.triggerConcept}": metafora visual "${m.metaphorIdea}" pada kata penekanan "${m.targetKeyword}"`).join('\n') || '- Gunakan metafora visual yang relevan dengan topik cerita.';
+
+      const systemPrompt = `Kamu adalah AI "Penyusun Scenes" untuk pipeline video vertikal REMOTION 9:16 gaya explainer.
+Kamu bertindak sebagai Sutradara Teknis yang mewujudkan VISI SUTRADARA & VISUAL INTENT berikut ke dalam skema scenes.src.json:
+
+=== PANDUAN VISI SUTRADARA & VISUAL INTENT (WAJIB DIIKUTI) ===
+- Alur Cerita (Story Arc):
+  * Hook: ${sArc.hook || '-'}
+  * Problem: ${sArc.problem || '-'}
+  * Solution: ${sArc.solution || '-'}
+  * CTA: ${sArc.cta || '-'}
+- Metafora Visual Utama: ${vTh.coreMetaphor || 'Visualisasi metaforis konkret'}
+- Pengikat Visual (Visual Anchor): ${vTh.visualAnchor || 'Karakter utama & palet warna selaras'}
+- Suasana & Tempo: ${vTh.mood || 'Modern dan dinamis'} | ${vTh.pacingStrategy || 'Pacing proporsional'}
+- Rekomendasi Metafora Kunci:
+${keyM}
+=============================================================
+
+Tugasmu adalah menganalisa SRT narasi dan menghasilkan JSON terstruktur yang berisi:
+1. "summaryTopic": deskripsi singkat topik dalam 3-6 kata bahasa Indonesia (${directorVision?.summaryTopic ? `rekomendasi sutradara: "${directorVision.summaryTopic}"` : ''}).
+2. "tag": label topik maksimal 3 kata (jika pengguna sudah memberi tag "${settings.tag}", gunakan itu).
+3. "imagePrompts": array daftar gambar untuk setiap blok bertipe "image" yang dipakai di scenes.
+4. "scenesData": objek scenes.src.json lengkap yang 100% mematuhi skema dan aturan di bawah.
+
+ATURAN MUTLAK (WAJIB DIPATUHI 100%):
+- KATA SRT UTUH (Aturan 6a): Gabungan semua "title" di scenes (setelah tanda *bintang* dihapus) HARUS SAMA PERSIS kata demi kata, berurutan, termasuk tanda baca melekat, dengan seluruh kata di SRT! Jangan mengubah, menghapus, menambah, atau membakukan satu kata pun!
+- PECAH ADEGAN (Langkah 2): Pecah narasi menjadi adegan pendek (1 frasa, 3-9 kata, sekitar 1-3 detik, di titik/koma/jeda alami).
+- JANGAN MEMECAH ADEGAN MENGIKUTI BARIS SRT. Baris SRT sering terpotong di tengah kalimat. Baca narasi sebagai satu teks utuh lalu pecah berdasarkan makna: satu adegan = satu frasa utuh, berhenti di koma/titik/jeda alami; jangan berakhir di tengah frasa.
+- WAJIB VISUAL 100% UNTUK SEMUA TEMA (Bersih, HUD, dan Klasik):
+  * SEMUA adegan (tanpa terkecuali!) HARUS memiliki tepat 1 blok visual di dalam array "stage". DILARANG KERAS menghasilkan adegan dengan "stage": [] kosong!
+  * Visual harus pas dan relevan dengan narasi yang sedang diucapkan (ngomong tentang A -> tampilkan visual A; ngomong tentang B -> tampilkan visual B).
+- SMALL hanya untuk kalimat pembuka: nilai 0, 1, 2, atau 3 dan harus menyisakan minimal 2 kata untuk judul besar. Jangan pernah mengisi small 4 atau lebih.
+- MASKOT: pakai posisi yang sama di beberapa adegan berurutan agar maskot tetap diam; jangan pindah posisi tiap adegan.
+- GAYA GAMBAR PILIHAN PENGGUNA: ${(settings.imageStyle && settings.imageStyle.artStyle) || 'FLAT_2D_VECTOR'} dengan latar ${(settings.imageStyle && settings.imageStyle.bgMode) || 'CREAM'}. Tulis field "prompt" tiap gambar sebagai deskripsi SUBJEK saja dalam bahasa Inggris (apa yang digambar, pose, benda, suasana), tanpa menyebut gaya, warna latar, atau teks; gaya dan latar ditambahkan otomatis oleh sistem. Untuk gaya foto produk, 3D, atau latar transparan: satu subjek tunggal di tengah, tanpa pemandangan.
+${manualImages.length ? '- GAMBAR MANUAL: pengguna sendiri akan memasang gambar pada adegan yang memuat kata berikut (JANGAN pasang blok image di adegan itu): ' + manualImages.map(m => '"' + (m.trigger || '?') + '"').join(', ') + '.' : ''}
+- TEMA VIDEO:
+  * Tema Bersih: Latar terang/krem/pastel. Semua blok visual (image, stat, compare, callout, list) tampil dengan kartu bersih dan modern.
+  * Tema HUD Hologram: Gelap futuristik. Visual blok dan gambar tampil serasi dengan tema neon/cyber.
+  * Tema Tutorial dan Neon: lihat ATURAN TEMA di bawah (blok terminal/browser/phone/chip/tiles/kpi/notifs/icons/profile/brand).
+  * Tema Klasik:
+    - Setiap adegan WAJIB memiliki field "bg" yang berganti-ganti (pilihan: "dawn", "dusk", "room", "stage", "night", "day", "office") agar latar dinamis dan tidak membosankan!
+    - Jika memakai maskot di adegan klasik, sertakan field "prop" yang relevan ("bulb", "confetti", "crowd", "fork", "laptop", "money", "orb", "phone", "shadow", "think", "trophy", "rocket", "chart", "lock"). Panduan: rocket = peluncuran / memulai / cepat; chart = data / pertumbuhan / angka naik; lock = keamanan / rahasia / privasi.
+    - Blok visual (image, callout, stat, meter, list) TETAP WAJIB ada di stage agar video klasik kaya visual, tidak hanya stickman berdiri.
+- BINTANG KATA KUNCI: Pada setiap "title", beri *bintang* pada 1-2 kata kunci. SATU pasang bintang hanya boleh membungkus SATU kata (contoh benar: "yang sudah *traktir* saya *kopi*", contoh salah: "*traktir saya*").
+- WAKTU START: "start" adegan pertama WAJIB = 0. Adegan berikutnya naik terus sesuai detik kata pertamanya diucapkan di daftar kata SRT.
+- SMALL: "small" adalah bilangan bulat (0 sampai jumlah kata title) yang menyatakan banyak kata pertama yang jadi baris kecil (misal "Yang pertama adalah" = 3). Jika ragu isi 0.
+- MASKOT & POSE:
+  - pose (opsional): "idle", "point", "shock", "sad", "cheer", "wave", "walk", "tremble", "think", "explain" (kedua telapak terbuka, cocok saat menjelaskan), "thumbs" (jempol, cocok untuk hal positif / penutup).
+  - mascot (opsional): "left", "center", "right".
+  - DILARANG memakai "mascot" bila adegan memiliki 2 blok di stage, ATAU memakai blok "window", ATAU memakai blok "image".
+- PILIH VISUAL TIAP ADEGAN (Langkah 3 - Cocokkan Kata dengan Visual):
+  a. BLOK "image" (Gambar Ilustrasi AI Metaforis & Story-Driven):
+     - Jumlah Gambar Proporsional Sesuai Panjang Video:
+       * Untuk video pendek (~30 detik / ~10-14 adegan): gunakan 4-7 blok "image".
+       * Untuk video menengah/panjang (~60 detik / ~20-30 adegan): gunakan 8-16 blok "image".
+     - Beri nama file berurutan: "img/img01.png", "img/img02.png", "img/img03.png", dst.
+     - ANTI LAYAR KOSONG:
+       * Blok visual (baik image maupun diagram) HARUS LANGSUNG TAMPIL di awal adegan (0 - 0.2 detik). Jangan membuat layar hampa menunggu kata.
+       * Properti "at" HANYA diberikan jika kata penekanan berada di kata ke-1 atau ke-2 dalam kalimat title. Jika kata penekanan berada di tengah atau akhir kalimat, JANGAN pasang properti "at" pada blok (biarkan blok langsung tampil sejak awal adegan), agar layar langsung terisi visual yang menarik!
+       * Jika sebuah konsep dibahas dalam 2 adegan berturut-turut, gunakan "hold": true pada adegan kedua (contoh: {"type":"image","src":"img/img02.png","hold":true}) agar visual adegan sebelumnya tetap bertahan stabil di layar dan tidak hilang tiba-tiba!
+     - Untuk setiap blok "image", buatkan entri di "imagePrompts" dengan field "prompt" berisi deskripsi subjek visual dalam bahasa Inggris yang detail, menggunakan ide metafora di atas, dan menyertakan elemen pengikat visual: "${vTh.visualAnchor || 'karakter/objek konsisten'}".
+  b. BLOK DIAGRAM / STATISTIK / PERBANDINGAN BAWAAN:
+     - Gunakan ragam 10 blok bawaan (window, compare, stat, meter, bars, tree, list, files, dialog, callout) untuk adegan yang tidak memakai image. Jangan biarkan adegan hanya teks polos; kombinasikan dengan blok-blok interaktif ini sesuai makna narasi!
+     - Bila kalimat berisi angka, persentase, atau pertumbuhan -> gunakan blok "stat" atau "meter" atau "bars".
+     - Bila kalimat berisi kontras/perbandingan ("bukan cuma untung tapi rasa takut") -> gunakan blok "compare".
+     - Bila kalimat berisi langkah-langkah, tips, atau poin -> gunakan blok "list" atau "window" (k: check).
+     - Bila adegan terakhir atau ajakan interaksi -> gunakan blok "callout" berisi ajakan (cta).
+  c. Tone warna hanya boleh kode hex 6 digit seperti "#3b6fd8", "#1f9d8a", "#e5252a".
+  d. Properti "at" (opsional pada blok/row): jika berupa string kata, kata tersebut HARUS ada persis di dalam "title" adegan itu (tanpa bintang).
+
+SKEMA BLOK STAGE YANG DIIZINKAN:
+1) window: {"type":"window","title":"Chatbot","tone":"#3b6fd8","rows":[...]} maks 4 rows.
+   Row ("k"):
+   - {"k":"bubble","from":"user"|"bot","text":"..."}
+   - {"k":"check","state":"done"|"busy"|"todo","text":"..."}
+   - {"k":"input","text":"teks diketik"}
+   - {"k":"note","text":"...","items":["Ubah","Setuju"]}
+   - {"k":"buttons","items":["Batal","Izinkan"]}
+   - {"k":"files","n":18} atau {"k":"files","groups":["Foto","Dokumen","Aplikasi"]}
+2) compare: {"type":"compare","left":{"title":"...","tone":"#3b6fd8","items":["...","..."]},"right":{"title":"...","tone":"#1f9d8a","items":["...","..."]}} (maks 3 item per kolom, maks 4 kata/item)
+3) tree: {"type":"tree","cols":[{"head":"...","mid":"...","tag":"...","low":"..."}]} (tepat 2-3 kolom)
+4) files: {"type":"files","title":"Download","n":24} atau {"type":"files","title":"Folder","groups":["Foto","Dokumen"]} (n maks 24)
+5) dialog: {"type":"dialog","title":"...","text":"...","sub":"...","buttons":["Batal","Izinkan"]}
+6) callout: {"type":"callout","title":"...","sub":"...","cta":"..."}
+7) list: {"type":"list","title":"...","items":["...","..."],"cta":"..."} (maks 4 item, tiap item maks 4 kata)
+8) stat: {"type":"stat","value":"87%","label":"..."}
+9) image: {"type":"image","src":"img/img01.png","caption":"keterangan maks 5 kata","at":"kataPuncak"}
+10) meter: {"type":"meter","title":"...","pct":51,"label":"..."} (pct 0-100 = tingkat/kemajuan; hanya ilustrasi proporsi, JANGAN mengarang statistik nyata)
+11) bars: {"type":"bars","title":"...","bars":[{"label":"Hari 1","value":20},{"label":"Hari 7","value":55},{"label":"Hari 30","value":90}],"hi":2} (3-6 batang, nilai 0-100 mengikuti arah narasi; batang hi disorot)
+
+
+=== BLOK & ATURAN TAMBAHAN (tema Tutorial & Neon; blok boleh dipakai di tema mana pun) ===
+12) terminal: {"type":"terminal","title":"Terminal","lines":[{"k":"cmd","text":"$ hermes config set model x"},{"k":"ok","text":"✓ model updated"}]} (maks 6 baris; k = cmd|out|ok|err|dim; perintah diketik huruf demi huruf)
+13) browser: {"type":"browser","url":"situs.com/install","title":"Nama Situs","items":["Windows","Mac"],"tab":1,"text":"curl -fsSL https://... | bash","cta":"Copy"} (semua field selain url opsional)
+14) phone: {"type":"phone","title":"NamaBot","sub":"bot","rows":[{"from":"user","text":"..."},{"from":"bot","text":"..."}]} (maks 5 bubble pendek)
+15) chip: {"type":"chip","title":"Rahasia","icon":"🔒","sub":"opsional","tag":"opsional","tone":"#ff3f8e"} (kartu label berikon, 1-3 kata)
+16) tiles: {"type":"tiles","cols":[{"head":"Front-end","mid":"Yang dilihat pengguna","tag":"▣"}]} (2-4 kartu kecil berdampingan)
+17) kpi: {"type":"kpi","title":"Pendapatan nyata","icon":"$","value":"US$ 11.876","tag":"+12%","pct":70,"big":true} (value boleh angka dengan awalan/akhiran; angka akan naik otomatis; big=true untuk angka besar di tengah)
+18) notifs: {"type":"notifs","notifs":[{"text":"Penjualan baru","sub":"Paket bulanan","value":"+US$ 49","icon":"$"}]} (maks 4, masuk satu per satu)
+19) icons: {"type":"icons","icons":[{"glyph":"A","label":"Agent"},{"glyph":"T","label":"Telegram"}]} (2-3 ikon besar dipisah panah)
+20) profile: {"type":"profile","title":"@akun","sub":"deskripsi singkat","cta":"Follow"} (kartu penutup ajakan follow)
+21) brand: {"type":"brand","sub":"Mulai bangun dengan","title":"NamaProduk","cta":"opsional"} (penutup produk; maskot orb disembunyikan)
+
+ATURAN TEMA TUTORIAL (hanya bila tema = tutorial):
+- Tanpa maskot. Tiap adegan WAJIB punya "step": "N" (nomor langkah, tetap sama selama beberapa adegan yang membahas langkah itu). Adegan pembuka (hook) dan penutup tanpa step.
+- Isi tengah berupa mockup yang MENGIKUTI isi narasi: buka situs -> browser; ketik perintah / tunggu proses -> terminal (baris diketik bertahap, akhiri dengan ok); atur bot / chat -> phone; pindah aplikasi -> icons.
+- Judul pendek (3-5 kata); satu kata kunci diberi *bintang*. Penutup: icons/profile ("Part berikutnya", "Follow").
+ATURAN TEMA NEON (hanya bila tema = neon):
+- Tanpa maskot vektor (orb dipasang otomatis). Boleh isi "orb":"big"|"small"|"hide" per adegan (default: big saat tanpa kartu / hanya 1 chip, selain itu small).
+- Kartu UI di tengah: chip untuk konsep/label, tiles & kpi untuk fitur/angka, notifs untuk bukti, bars untuk pertumbuhan. Satu adegan boleh 1-3 kartu.
+- Hook boleh tanpa kartu atau cukup 1 chip agar orb besar tampil. Penutup: brand.
+=============================================================
+
+ATURAN PROMPT GAMBAR (untuk setiap blok image):
+Untuk setiap "img/img01.png", dst., tulis deskripsi subjek gambar dalam bahasa Inggris yang kaya metafora visual (bukan sekadar objek harfiah kata-per-kata), terpusat, menyertakan elemen visual anchor "${vTh.visualAnchor || 'karakter/objek konsisten'}", tanpa teks/angka/logo/watermark. Gaya visual ${(settings.imageStyle && settings.imageStyle.artStyle) || 'FLAT_2D_VECTOR'} akan diterapkan otomatis oleh sistem.
+
+Keluarkan HANYA objek JSON murni sesuai struktur berikut:
+{
+  "summaryTopic": "...",
+  "tag": "...",
+  "imagePrompts": [
+    { "fileName": "img01.png", "src": "img/img01.png", "caption": "...", "prompt": "..." }
+  ],
+  "scenesData": {
+    "style": "explainer",
+    "brand": "${settings.brand}",
+    "tag": "...",
+    "accent": "${settings.accent}",
+    "char": "${settings.char}",
+    "charColor": "#222222",
+    "cta": "${settings.cta}",
+    "scenes": [ ... ]
+  }
+}`;
+
+      const userQuery = `Berikut adalah daftar entri SRT dan daftar urutan kata beserta detiknya.
+PENTING: Pastikan gabungan seluruh "title" pada "scenes" (tanpa tanda *) SAMA PERSIS dengan teks utuh berikut:
+"${fullSrtTranscript}"
+
+Daftar Entri SRT:
+${JSON.stringify(srtEntries, null, 2)}
+
+Daftar Kata & Estimasi Detik:
+${JSON.stringify(wordTimeline)}
+
+Pengaturan Tetap:
+- tema video: "${settings.theme || 'clean'}"
+- brand: "${settings.brand}"
+- cta: "${settings.cta}"
+- tag pilihan user: "${settings.tag || '(simpulkan sendiri 2-3 kata dari isi narasi)'}"
+- char: "${settings.char}"
+- accent: "${settings.accent}"`;
+
+      const payload = {
+        contents: [{ role: "user", parts: [{ text: userQuery }] }],
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        generationConfig: {
+          responseMimeType: "application/json"
+        }
+      };
+
+      const result = await fetchWithRetry(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const rawJson = result?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+      return JSON.parse(rawJson);
+    }
+
+    // =========================================================================
+    // LANGKAH 6: PROGRAMMATIC SELF-CHECK & AUTO-REPAIR GUARDRAILS
+    // =========================================================================
+    function enforceAndValidateScenes(aiOutput, srtEntries, settings) {
+      const fullSrtWords = srtEntries.flatMap(e => getWordsArray(e.text));
+      const wordTimeline = [];
+      srtEntries.forEach(entry => {
+        const words = getWordsArray(entry.text);
+        const dur = Math.max(0.5, entry.end - entry.start);
+        words.forEach((w, idx) => {
+          const wTime = Math.round((entry.start + (idx / words.length) * dur) * 10) / 10;
+          wordTimeline.push({ word: w, time: wTime });
+        });
+      });
+
+      let scenesObj = aiOutput?.scenesData || {};
+      scenesObj.style = "explainer";
+      scenesObj.header = settings.showHeader !== false;
+      scenesObj.brand = settings.brand || "NamaBrandSaya";
+      scenesObj.tag = (settings.tag || aiOutput?.tag || scenesObj.tag || "explainer Â· video").split(/\s+/).slice(0, 4).join(' ');
+      const tagForSummary = scenesObj.tag;
+      scenesObj.accent = /^#[0-9a-fA-F]{6}$/.test(settings.accent) ? settings.accent : "#e5252a";
+      scenesObj.char = ["girl", "boss", "robot"].includes(settings.char) ? settings.char : "boss";
+      if (settings.char === "plain") delete scenesObj.char;
+      scenesObj.charColor = "#222222";
+      scenesObj.cta = settings.cta || "Link-nya di bio";
+      delete scenesObj.durationInFrames;
+      // --- tampilan: toggle + gaya (dibaca renderer Explainer.tsx) ---
+      if (settings.showHeader === false) delete scenesObj.brand;
+      if (settings.showTag === false) delete scenesObj.tag;
+      if (settings.showCta === false) delete scenesObj.cta;
+      scenesObj.charStyle = settings.charStyle || "block";
+      if (scenesObj.charStyle === "sprite") {
+        if (charSprites.idle) {
+          scenesObj.charImg = "char/idle.png";
+          if (charSprites.talk) scenesObj.charTalkImg = "char/talk.png";
+        } else {
+          scenesObj.charStyle = "block"; // belum ada gambar: kembali ke blok
+        }
+      }
+      if (settings.textColor) scenesObj.textColor = settings.textColor; else delete scenesObj.textColor;
+      scenesObj.transitions = Array.isArray(settings.transitions) ? settings.transitions : [];
+      scenesObj.transitionsMode = settings.transitionsMode || "cycle";
+      scenesObj.backgrounds = Array.isArray(settings.backgrounds) && settings.backgrounds.length ? settings.backgrounds : ["cream"];
+      scenesObj.bgMode = settings.bgMode || "single";
+      scenesObj.bgEvery = settings.bgEvery || 3;
+      scenesObj.theme = ["hud", "classic", "tutorial", "neon"].includes(settings.theme) ? settings.theme : "clean";
+      if (scenesObj.theme === "tutorial") {
+        scenesObj.header = false;
+        if (settings.handle) scenesObj.handle = settings.handle; else delete scenesObj.handle;
+        scenesObj.stepLabel = settings.stepLabel || "Langkah";
+      } else { delete scenesObj.handle; delete scenesObj.stepLabel; }
+      if (scenesObj.theme === "neon") scenesObj.header = false;
+      scenesObj.audio = { music: settings.audioMusic !== false, sfx: settings.audioSfx !== false, blockSfx: settings.audioBlock !== false };
+
+      if (!Array.isArray(scenesObj.scenes) || scenesObj.scenes.length === 0) {
+        // Fallback chunking from SRT entries
+        scenesObj.scenes = srtEntries.map((e, i) => ({
+          title: e.text,
+          start: i === 0 ? 0 : e.start,
+          small: 0,
+          pose: "point",
+          mascot: "left",
+          stage: [{ type: "callout", title: e.text.split(/\s+/).slice(0, 4).join(' '), sub: "", cta: "" }]
+        }));
+      }
+
+      // Fix single-word asterisk rule on all scene titles first
+      scenesObj.scenes.forEach(sc => {
+        if (typeof sc.title === 'string') {
+          // Convert any multi-word *phrase here* into *phrase* *here*
+          sc.title = sc.title.replace(/\*([^*]+)\*/g, (_, inner) => {
+            return inner.trim().split(/\s+/).slice(0, 2).map(w => `*${w}*`).join(' ');
+          });
+        }
+      });
+
+      // Check Rule 6a: Does concatenated title words match fullSrtWords 100%?
+      const currentSceneWords = scenesObj.scenes.flatMap(sc => getWordsArray(sc.title));
+      const wordsMatchExact =
+        currentSceneWords.length === fullSrtWords.length &&
+        currentSceneWords.every((w, i) => normalizeWordForCompare(w) === normalizeWordForCompare(fullSrtWords[i]));
+
+      if (!wordsMatchExact && fullSrtWords.length > 0) {
+        // Re-align words across the existing scenes proportionally so Rule 6a is 100% guaranteed!
+        const numScenes = scenesObj.scenes.length;
+        const rawCounts = scenesObj.scenes.map(sc => Math.max(1, getWordsArray(sc.title).length));
+        const totalRaw = rawCounts.reduce((a, b) => a + b, 0);
+
+        let cursor = 0;
+        scenesObj.scenes.forEach((sc, idx) => {
+          // Collect starred words from AI's draft title so we preserve keyword stars
+          const starredSet = new Set(
+            (sc.title.match(/\*([^*]+)\*/g) || []).map(s => s.replace(/\*/g, '').toLowerCase().replace(/[.,?!]/g, ''))
+          );
+
+          let takeCount = idx === numScenes - 1
+            ? (fullSrtWords.length - cursor)
+            : Math.max(1, Math.round((rawCounts[idx] / totalRaw) * fullSrtWords.length));
+
+          // Ensure remaining scenes get at least 1 word each
+          const maxAllowed = fullSrtWords.length - cursor - (numScenes - 1 - idx);
+          takeCount = Math.min(takeCount, Math.max(1, maxAllowed));
+
+          const sliceWords = fullSrtWords.slice(cursor, cursor + takeCount);
+          const wordStartIdx = cursor;
+          cursor += takeCount;
+
+          // Apply stars to up to 2 keywords in sliceWords
+          let starsUsed = 0;
+          const rebuiltWords = sliceWords.map((w, wIdx) => {
+            const cleanW = w.toLowerCase().replace(/[.,?!]/g, '');
+            if (starsUsed < 2 && (starredSet.has(cleanW) || (starredSet.size === 0 && wIdx === sliceWords.length - 1 && cleanW.length > 3))) {
+              starsUsed++;
+              return `*${w}*`;
+            }
+            return w;
+          });
+
+          sc.title = rebuiltWords.join(' ');
+          sc.start = idx === 0 ? 0 : (wordTimeline[wordStartIdx]?.time ?? sc.start);
+        });
+      }
+
+      // Enforce start times strictly increasing & first scene start = 0 (Rule 6b)
+      let prevStart = 0;
+      scenesObj.scenes.forEach((sc, idx) => {
+        if (idx === 0) {
+          sc.start = 0;
+          prevStart = 0;
+        } else {
+          let s = typeof sc.start === 'number' ? Math.round(sc.start * 10) / 10 : prevStart + 1.5;
+          if (s <= prevStart) s = Math.round((prevStart + 0.8) * 10) / 10;
+          sc.start = s;
+          prevStart = s;
+        }
+      });
+
+      // Enforce image rules (max 5 images, never two consecutive scenes with image, sequential img01..img05)
+      let imgCounter = 0;
+      let prevHadImage = false;
+      const validImagePrompts = [];
+      const rawPrompts = Array.isArray(aiOutput?.imagePrompts) ? aiOutput.imagePrompts : [];
+
+      const validPoses = ["idle", "point", "shock", "sad", "cheer", "wave", "walk", "tremble", "think", "explain", "thumbs"];
+      const validMascots = ["left", "center", "right"];
+      const validBlockTypes = ["window", "compare", "tree", "files", "dialog", "callout", "list", "stat", "image", "meter", "bars", "terminal", "browser", "phone", "chip", "tiles", "kpi", "notifs", "icons", "profile", "brand"];
+      const isTut = settings.theme === "tutorial";
+      const isNeon = settings.theme === "neon";
+
+      scenesObj.scenes.forEach((sc, idx) => {
+        const titleWords = getWordsArray(sc.title);
+        const cleanTitleWordsLower = titleWords.map(w => w.replace(/[.,?!:;"]/g, '').toLowerCase());
+
+        // Rule 6d: small <= word count
+        sc.small = typeof sc.small === 'number' && sc.small >= 0 && sc.small <= 3 && sc.small <= titleWords.length - 2
+          ? Math.floor(sc.small)
+          : 0;
+
+        if (sc.pose && !validPoses.includes(sc.pose)) {
+          sc.pose = "point";
+        }
+
+        if (!Array.isArray(sc.stage)) sc.stage = [];
+        sc.stage = sc.stage.filter(b => b && validBlockTypes.includes(b.type)).slice(0, isNeon ? 3 : 2);
+
+        // Guardrail: jika stage kosong, otomatis isi visual yang relevan agar video tidak cuma teks!
+        if (sc.stage.length === 0) {
+          const rawWords = cleanTitleWordsLower;
+          if (rawWords.some(w => ['bukan', 'tapi', 'banding', 'vs', 'daripada'].includes(w))) {
+            sc.stage = [{
+              type: "callout",
+              title: titleWords.slice(0, 4).join(' '),
+              sub: titleWords.slice(4, 9).join(' '),
+              cta: ""
+            }];
+          } else if (rawWords.some(w => /\d+%?/.test(w) || ['tingkat', 'naik', 'proses', 'persen', 'skor', 'tumbuh'].includes(w))) {
+            sc.stage = [{
+              type: "meter",
+              title: titleWords.slice(0, 4).join(' '),
+              pct: 75,
+              label: titleWords.slice(4, 8).join(' ') || "Kemajuan"
+            }];
+          } else {
+            sc.stage = [{
+              type: "callout",
+              title: titleWords.slice(0, 4).join(' '),
+              sub: titleWords.slice(4, 9).join(' '),
+              cta: ""
+            }];
+          }
+        }
+
+        // Check image blocks in this scene
+        let sceneHasImage = sc.stage.some(b => b.type === "image");
+        if (sceneHasImage) {
+          const maxImagesAllowed = Math.max(16, Math.min(25, Math.round(scenesObj.scenes.length * 0.65)));
+          if (imgCounter >= maxImagesAllowed) {
+            // Batasi jika melebihi kuota proporsional per video
+            sc.stage = sc.stage.map(b => {
+              if (b.type === "image") {
+                return {
+                  type: "callout",
+                  title: b.caption || titleWords.slice(0, 4).join(' '),
+                  sub: "",
+                  cta: ""
+                };
+              }
+              return b;
+            });
+            sceneHasImage = false;
+          } else {
+            imgCounter++;
+            const fileName = `img${String(imgCounter).padStart(2, '0')}.png`;
+            const srcPath = `img/${fileName}`;
+            // Only 1 image block per scene
+            const imgBlock = sc.stage.find(b => b.type === "image");
+            const matchedPromptObj = rawPrompts[imgCounter - 1] || {};
+            imgBlock.src = srcPath;
+            const imgStyleSel = settings.imageStyle || {};
+            imgBlock.h = ({ "4:3": 700, "1:1": 820, "3:4": 960 })[imgStyleSel.ratio] || 700;
+            if (imgStyleSel.bgMode === "TRANSPARENT") imgBlock.frame = false; else delete imgBlock.frame;
+            if (!imgBlock.caption) {
+              imgBlock.caption = (matchedPromptObj.caption || titleWords.slice(0, 4).join(' ')).split(/\s+/).slice(0, 5).join(' ');
+            } else {
+              imgBlock.caption = imgBlock.caption.split(/\s+/).slice(0, 5).join(' ');
+            }
+            sc.stage = [imgBlock];
+
+            const anchorNote = currentDirectorVision?.visualTheme?.visualAnchor ? `, featuring ${currentDirectorVision.visualTheme.visualAnchor}` : '';
+            const defaultEnglishPrompt = `Metaphorical illustration in ${imgStyleSel.artStyle || 'FLAT_2D_VECTOR'} style representing: ${imgBlock.caption} (${stripStars(sc.title)})${anchorNote}, centered, coherent, clean, NO text, NO letters, NO numbers, NO logos`;
+
+            validImagePrompts.push({
+              fileName,
+              src: srcPath,
+              caption: imgBlock.caption,
+              sceneTitle: stripStars(sc.title),
+              prompt: matchedPromptObj.prompt || defaultEnglishPrompt
+            });
+          }
+        } else {
+          prevHadImage = false;
+        }
+
+        // Validate each block & its "at" property (Rule 6c & 6e)
+        // Guardrail anti layar kosong: jangan biarkan stage hampa berlama-lama menunggu kata diucapkan
+        sc.stage.forEach(block => {
+          if (typeof block.at === 'string') {
+            const atClean = block.at.replace(/[.,?!:;*]/g, '').toLowerCase();
+            const foundIdx = cleanTitleWordsLower.findIndex(w => w === atClean);
+            if (foundIdx === -1) {
+              delete block.at;
+            } else if (foundIdx > 2) {
+              // Jika kata pemicu berada di belakang (> kata ke-2), hapus 'at' agar objek langsung tampil sejak awal adegan
+              delete block.at;
+            } else {
+              // Gunakan kata persis dari title (muncul dalam 0-0.5 detik awal)
+              block.at = titleWords[foundIdx].replace(/[.,?!:;]/g, '');
+            }
+          } else if (typeof block.at === 'number') {
+            if (block.at > 0.6) {
+              delete block.at; // Hapus jeda angka jika terlalu lama
+            } else {
+              block.at = Math.max(0, Math.round(block.at * 10) / 10);
+            }
+          } else {
+            delete block.at;
+          }
+
+          // Sanitize block-specific fields
+          if (block.type === "window") {
+            block.title = block.title || "Aplikasi";
+            block.tone = /^#[0-9a-fA-F]{6}$/.test(block.tone) ? block.tone : "#3b6fd8";
+            block.rows = (Array.isArray(block.rows) ? block.rows : []).slice(0, 4);
+            block.rows.forEach(r => {
+              if (typeof r.at === 'string') {
+                const rAt = r.at.replace(/[.,?!:;*]/g, '').toLowerCase();
+                if (!cleanTitleWordsLower.includes(rAt)) delete r.at;
+              }
+            });
+          } else if (block.type === "compare") {
+            block.left = block.left || { title: "Lama", tone: "#3b6fd8", items: ["Manual"] };
+            block.right = block.right || { title: "Baru", tone: "#1f9d8a", items: ["Otomatis"] };
+            block.left.tone = /^#[0-9a-fA-F]{6}$/.test(block.left.tone) ? block.left.tone : "#3b6fd8";
+            block.right.tone = /^#[0-9a-fA-F]{6}$/.test(block.right.tone) ? block.right.tone : "#1f9d8a";
+            block.left.items = (block.left.items || []).slice(0, 3);
+            block.right.items = (block.right.items || []).slice(0, 3);
+          } else if (block.type === "tree") {
+            block.cols = (Array.isArray(block.cols) ? block.cols : []).slice(0, 3);
+            while (block.cols.length < 2) {
+              block.cols.push({ head: "Bagian " + (block.cols.length + 1), mid: "Proses", tag: "aktif" });
+            }
+          } else if (block.type === "files") {
+            block.title = block.title || "File";
+            if (typeof block.n === 'number') block.n = Math.min(24, Math.max(1, block.n));
+          } else if (block.type === "list") {
+            block.title = block.title || "Daftar";
+            block.items = (Array.isArray(block.items) ? block.items : []).slice(0, 4);
+            block.cta = block.cta || "";
+          } else if (block.type === "callout") {
+            block.title = block.title || titleWords.slice(0, 4).join(' ');
+            block.sub = block.sub || "";
+            block.cta = block.cta || "";
+          } else if (block.type === "stat") {
+            block.value = String(block.value || "100%");
+            block.label = block.label || titleWords.slice(0, 4).join(' ');
+          } else if (block.type === "dialog") {
+            block.title = block.title || "Konfirmasi";
+            block.text = block.text || titleWords.slice(0, 5).join(' ');
+            block.sub = block.sub || "";
+            block.buttons = Array.isArray(block.buttons) && block.buttons.length ? block.buttons.slice(0, 2) : ["Batal", "Izinkan"];
+          } else if (block.type === "meter") {
+            block.title = block.title || titleWords.slice(0, 3).join(' ');
+            const pv = Number(block.pct);
+            block.pct = Number.isFinite(pv) ? Math.min(100, Math.max(0, Math.round(pv))) : 50;
+            block.label = block.label || "";
+          } else if (block.type === "bars") {
+            block.title = block.title || "";
+            block.bars = (Array.isArray(block.bars) ? block.bars : []).slice(0, 6).map((it, bi) => ({
+              label: String((it && it.label) || (bi + 1)).slice(0, 10),
+              value: Math.min(100, Math.max(0, Math.round(Number(it && it.value) || 0)))
+            }));
+            while (block.bars.length < 3) block.bars.push({ label: String(block.bars.length + 1), value: 30 + block.bars.length * 20 });
+            if (typeof block.hi !== 'number' || block.hi < 0 || block.hi >= block.bars.length) block.hi = block.bars.length - 1;
+          } else if (block.type === "terminal") {
+            block.title = block.title || "Terminal";
+            block.lines = (Array.isArray(block.lines) ? block.lines : []).slice(0, 8).map(l => {
+              const o = { text: String((l && l.text) || "").slice(0, 90) };
+              if (l && ["cmd", "out", "ok", "err", "dim"].includes(l.k)) o.k = l.k;
+              return o;
+            }).filter(l => l.text);
+            if (!block.lines.length) block.lines = [{ k: "cmd", text: "$ " + titleWords.slice(0, 3).join(' ').toLowerCase() }];
+          } else if (block.type === "browser") {
+            block.url = String(block.url || "contoh.com").replace(/^https?:\/\//, "").slice(0, 48);
+            if (block.title) block.title = String(block.title).slice(0, 28);
+            if (Array.isArray(block.items)) block.items = block.items.slice(0, 3).map(x => String(x).slice(0, 12)); else delete block.items;
+            if (block.text) block.text = String(block.text).slice(0, 140);
+            if (block.cta) block.cta = String(block.cta).slice(0, 14);
+          } else if (block.type === "phone") {
+            block.title = String(block.title || "Bot").slice(0, 20);
+            block.rows = (Array.isArray(block.rows) ? block.rows : []).slice(0, 6).map(r => ({ from: r && r.from === "user" ? "user" : "bot", text: String((r && r.text) || "").slice(0, 60) })).filter(r => r.text);
+          } else if (block.type === "chip") {
+            block.title = String(block.title || titleWords.slice(0, 2).join(' ')).slice(0, 24);
+            if (block.sub) block.sub = String(block.sub).slice(0, 36);
+            if (block.tag) block.tag = String(block.tag).slice(0, 14);
+            if (!/^#[0-9a-fA-F]{6}$/.test(block.tone || "")) delete block.tone;
+          } else if (block.type === "tiles") {
+            block.cols = (Array.isArray(block.cols) ? block.cols : []).slice(0, 4).map(c => ({ head: String((c && c.head) || "Item").slice(0, 14), mid: c && c.mid ? String(c.mid).slice(0, 22) : undefined, tag: c && c.tag ? String(c.tag).slice(0, 2) : undefined }));
+            if (!block.cols.length) block.cols = [{ head: titleWords.slice(0, 2).join(' ') }];
+          } else if (block.type === "kpi") {
+            block.title = String(block.title || titleWords.slice(0, 2).join(' ')).slice(0, 24);
+            if (block.value !== undefined) block.value = String(block.value).slice(0, 14);
+            if (block.tag) block.tag = String(block.tag).slice(0, 12);
+            if (block.pct !== undefined) { const pv = Number(block.pct); if (Number.isFinite(pv)) block.pct = Math.min(100, Math.max(0, Math.round(pv))); else delete block.pct; }
+            if (Array.isArray(block.items)) block.items = block.items.slice(0, 5).map(x => String(x).slice(0, 2)); else delete block.items;
+            if (!/^#[0-9a-fA-F]{6}$/.test(block.tone || "")) delete block.tone;
+            block.big = !!block.big;
+          } else if (block.type === "notifs") {
+            block.notifs = (Array.isArray(block.notifs) ? block.notifs : []).slice(0, 4).map(n => ({ text: String((n && n.text) || "Notifikasi").slice(0, 30), sub: n && n.sub ? String(n.sub).slice(0, 30) : undefined, value: n && n.value ? String(n.value).slice(0, 10) : undefined, icon: n && n.icon ? String(n.icon).slice(0, 2) : undefined }));
+            if (!block.notifs.length) block.notifs = [{ text: titleWords.slice(0, 3).join(' ') }];
+          } else if (block.type === "icons") {
+            block.icons = (Array.isArray(block.icons) ? block.icons : []).slice(0, 3).map(ic => ({ glyph: ic && ic.glyph ? String(ic.glyph).slice(0, 2) : undefined, label: ic && ic.label ? String(ic.label).slice(0, 14) : undefined }));
+            if (!block.icons.length) block.icons = [{ glyph: "★", label: titleWords.slice(0, 1).join(' ') }];
+          } else if (block.type === "profile") {
+            block.title = String(block.title || scenesObj.brand || "Akun").slice(0, 24);
+            if (block.sub) block.sub = String(block.sub).slice(0, 44);
+            block.cta = String(block.cta || "Follow").slice(0, 16);
+          } else if (block.type === "brand") {
+            block.title = String(block.title || scenesObj.brand || "Brand").slice(0, 16);
+            if (block.sub) block.sub = String(block.sub).slice(0, 30);
+          }
+        });
+
+        // Last scene MUST have callout with CTA
+        if (idx === scenesObj.scenes.length - 1 && !sceneHasImage && !sc.stage.some(b => b.type === "profile" || b.type === "brand")) {
+          const hasCallout = sc.stage.some(b => b.type === "callout");
+          if (!hasCallout) {
+            sc.stage = [{
+              type: "callout",
+              title: titleWords.slice(0, 4).join(' '),
+              sub: scenesObj.brand || "",
+              cta: ""
+            }];
+          } else {
+            const co = sc.stage.find(b => b.type === "callout");
+            co.cta = ""; // CTA tampil sebagai pil terpisah (field cta tingkat atas); jangan diduplikasi di callout
+          }
+        }
+
+        // Mascot rule: Adegan dengan 2 blok atau window atau image -> JANGAN pakai mascot
+        const hasHeavyBlock = sc.stage.length > 1 || sc.stage.some(b => b.type === "window" || b.type === "image");
+        if (hasHeavyBlock) {
+          delete sc.mascot;
+          delete sc.pose;
+        } else {
+          if (sc.mascot && !validMascots.includes(sc.mascot)) {
+            sc.mascot = "left";
+          }
+        }
+      });
+
+      // Tema Tutorial / Neon: tanpa maskot vektor; tutorial memakai nomor langkah (step) yang menurun ke adegan berikutnya
+      if (settings.theme === 'tutorial' || settings.theme === 'neon') {
+        scenesObj.scenes.forEach(sc => { delete sc.mascot; delete sc.pose; });
+      }
+      if (settings.theme === 'tutorial') {
+        const stepsSeen = scenesObj.scenes.map(sc => String(sc.step || '').split('/')[0].replace(/\D/g, '')).filter(Boolean).map(Number);
+        const total = Math.max(1, ...stepsSeen, 1);
+        let cur = '';
+        scenesObj.scenes.forEach((sc, i) => {
+          const raw = String(sc.step || '').split('/')[0].replace(/\D/g, '');
+          if (raw) cur = raw;
+          if (!cur && i === 0) cur = '1';
+          if (cur) sc.step = cur + '/' + total; else delete sc.step;
+        });
+        // adegan pembuka (hook) dan penutup tidak memakai lencana
+        if (scenesObj.scenes.length) { delete scenesObj.scenes[0].step; delete scenesObj.scenes[scenesObj.scenes.length - 1].step; }
+      } else {
+        scenesObj.scenes.forEach(sc => { delete sc.step; });
+      }
+      if (settings.theme !== 'neon') scenesObj.scenes.forEach(sc => { delete sc.orb; });
+      else scenesObj.scenes.forEach(sc => { if (sc.orb && !["big", "small", "hide"].includes(sc.orb)) delete sc.orb; });
+
+      // Tema Klasik: bg/prop hanya dari daftar yang dikenal renderer; maskot besar default di samping/tengah
+      if (settings.theme === 'classic') {
+        const CBG = ["night", "room", "stage", "dusk", "day", "office", "dawn"];
+        const CPROP = ["bulb", "confetti", "crowd", "fork", "laptop", "money", "orb", "phone", "shadow", "think", "trophy", "rocket", "chart", "lock"];
+        const poseCycle = ["idle", "explain", "point", "wave", "think", "cheer", "thumbs"];
+        scenesObj.scenes.forEach((sc, i) => {
+          // Pastikan background selalu berganti dan bervariasi antar adegan!
+          if (!CBG.includes(sc.bg)) {
+            sc.bg = CBG[i % CBG.length];
+          }
+          if (sc.prop && !CPROP.includes(sc.prop)) delete sc.prop;
+          if (!sc.prop) {
+            // pilih properti dari makna kalimat lebih dulu; bila tak ada yang cocok, pakai pola lama (selang-seling)
+            const tl = stripStars(sc.title || '').toLowerCase();
+            if (/\b(aman|keamanan|rahasia|privasi|sandi|password|kunci|terkunci|lindungi)\b/.test(tl)) sc.prop = "lock";
+            else if (/\b(grafik|data|statistik|persen|tumbuh|naik|meningkat|angka|pertumbuhan)\b/.test(tl)) sc.prop = "chart";
+            else if (/\b(luncur|meluncur|peluncuran|mulai|memulai|startup|cepat|melesat)\b/.test(tl)) sc.prop = "rocket";
+            else if (i % 2 === 0) sc.prop = CPROP[i % CPROP.length];
+          }
+          const hasImageOrHeavy = sc.stage && sc.stage.some(b => b.type === "image" || b.type === "window" || b.type === "compare");
+          if (hasImageOrHeavy) {
+            if (sc.mascot === "center") sc.mascot = "right";
+          } else if (!sc.mascot) {
+            sc.mascot = i % 2 === 0 ? "left" : "right";
+          }
+          if (sc.mascot && !sc.pose) sc.pose = poseCycle[i % poseCycle.length];
+        });
+        delete scenesObj.backgrounds;
+        delete scenesObj.bgMode;
+      } else {
+        scenesObj.scenes.forEach(sc => { delete sc.bg; delete sc.prop; });
+      }
+
+      // Gambar manual pengguna (screenshot/foto) dipasang di adegan yang memuat kata pemicu
+      applyManualImages(scenesObj, validImagePrompts);
+
+      return {
+        summaryTopic: aiOutput?.summaryTopic || tagForSummary,
+        scenesObj,
+        validImagePrompts
+      };
+    }
+
+    // Run full 7-point inspection on any scenesObj & srtEntries
+    function runSevenPointCheck(scenesObj, srtEntries) {
+      const checks = [];
+      try {
+        const srtWords = srtEntries.flatMap(e => getWordsArray(e.text));
+        const sceneWords = (scenesObj.scenes || []).flatMap(sc => getWordsArray(sc.title));
+        const aPass = srtWords.length === sceneWords.length &&
+          srtWords.every((w, i) => normalizeWordForCompare(w) === normalizeWordForCompare(sceneWords[i]));
+        checks.push({ id: 'a', pass: aPass, text: `a. Kata title == seluruh kata SRT (${sceneWords.length}/${srtWords.length} kata)` });
+
+        let bPass = scenesObj.scenes?.length > 0 && scenesObj.scenes[0].start === 0;
+        for (let i = 1; i < (scenesObj.scenes || []).length; i++) {
+          if (scenesObj.scenes[i].start <= scenesObj.scenes[i - 1].start) bPass = false;
+        }
+        checks.push({ id: 'b', pass: bPass, text: `b. Waktu start mulai dari 0 & naik berurutan` });
+
+        let cPass = true;
+        let dPass = true;
+        let ePass = true;
+        let imgCount = 0;
+        let prevImg = false;
+        let fPass = true;
+
+        (scenesObj.scenes || []).forEach(sc => {
+          const tWords = getWordsArray(sc.title).map(w => w.replace(/[.,?!:;]/g, '').toLowerCase());
+          if (typeof sc.small !== 'number' || sc.small < 0 || sc.small > 3 || sc.small > tWords.length - 2) dPass = false;
+
+          const stage = sc.stage || [];
+          const hasWindowOrImg = stage.some(b => b.type === 'window' || b.type === 'image');
+          if ((stage.length > 1 || hasWindowOrImg) && sc.mascot) ePass = false;
+
+          const hasImg = stage.some(b => b.type === 'image');
+          const isManualImg = hasImg && /^img\/manual/.test(stage.find(b => b.type === 'image').src || '');
+          if (hasImg && !isManualImg) {
+            imgCount++;
+            if (prevImg || imgCount > 5) fPass = false;
+            const imgB = stage.find(b => b.type === 'image');
+            if (imgB.src !== `img/img0${imgCount}.png`) fPass = false;
+            prevImg = true;
+          } else {
+            prevImg = false;
+          }
+
+          stage.forEach(b => {
+            if (typeof b.at === 'string') {
+              if (!tWords.includes(b.at.replace(/[.,?!:;]/g, '').toLowerCase())) cPass = false;
+            }
+          });
+        });
+
+        checks.push({ id: 'c', pass: cPass, text: `c. Setiap "at" bertipe kata ada di title adegannya` });
+        checks.push({ id: 'd', pass: dPass, text: `d. Nilai "small" â‰¤ jumlah kata title` });
+        checks.push({ id: 'e', pass: ePass, text: `e. Skema blok & aturan maskot sesuai spesifikasi` });
+        checks.push({ id: 'f', pass: fPass, text: `f. Gambar ${imgCount}/5 (tidak berurutan, img01..img0${imgCount} cocok)` });
+
+        JSON.stringify(scenesObj);
+        checks.push({ id: 'g', pass: true, text: `g. JSON 100% valid (kutip ganda, tanpa koma sisa)` });
+      } catch (e) {
+        checks.push({ id: 'g', pass: false, text: `g. JSON tidak valid: ${e.message}` });
+      }
+      return checks;
+    }
+
+    function renderSelfCheckList(checks) {
+      el.selfCheckList.innerHTML = checks.map(c => `
+        <li class="flex items-center gap-2 ${c.pass ? 'text-emerald-300' : 'text-amber-300'}">
+          <span>${c.pass ? '&#10003;' : '&#9888;'}</span>
+          <span>${c.text}</span>
+        </li>
+      `).join('');
+    }
+
+    // =========================================================================
+    // LANGKAH 4: PEMBUATAN GAMBAR (AI + FLAT VECTOR CANVAS FALLBACK)
+    // =========================================================================
+    // Membuat ilustrasi vektor datar 4:3 (800x600) berpalet hangat sebagai cadangan instan atau mode cepat
+    function createFlatVectorCanvasDataUrl(promptObj, index) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 800;
+      canvas.height = 600;
+      const ctx = canvas.getContext('2d');
+
+      // Background: Plain warm cream (#faf6ef)
+      ctx.fillStyle = '#faf6ef';
+      ctx.fillRect(0, 0, 800, 600);
+
+      // Soft decorative background circle in center
+      const palette = ['#e5252a', '#3b6fd8', '#1f9d8a', '#f59e0b'];
+      const primary = palette[index % palette.length];
+      const secondary = palette[(index + 1) % palette.length];
+      const tertiary = palette[(index + 2) % palette.length];
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(400, 300, 190, 0, Math.PI * 2);
+      ctx.fillStyle = '#f2eadb';
+      ctx.fill();
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = '#222222';
+      ctx.stroke();
+
+      // Draw clean flat-vector metaphorical scene based on index/keywords (NO TEXT at all!)
+      const lower = (promptObj.caption + ' ' + promptObj.prompt).toLowerCase();
+      ctx.lineWidth = 7;
+      ctx.strokeStyle = '#222222';
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+
+      if (lower.includes('dapur') || lower.includes('kitchen') || lower.includes('restoran') || lower.includes('masak')) {
+        // Counter table
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(210, 340, 380, 90);
+        ctx.strokeRect(210, 340, 380, 90);
+        // Cooking pot
+        ctx.fillStyle = '#e5252a';
+        ctx.fillRect(280, 260, 110, 80);
+        ctx.strokeRect(280, 260, 110, 80);
+        // Lid
+        ctx.fillStyle = '#3b6fd8';
+        ctx.beginPath();
+        ctx.arc(335, 260, 55, Math.PI, 0);
+        ctx.fill();
+        ctx.stroke();
+        // Cloche / Dome plate
+        ctx.fillStyle = '#1f9d8a';
+        ctx.beginPath();
+        ctx.arc(485, 340, 55, Math.PI, 0);
+        ctx.fill();
+        ctx.stroke();
+        // Steam wavy lines
+        for (let i = 0; i < 3; i++) {
+          ctx.beginPath();
+          ctx.moveTo(310 + i * 25, 195);
+          ctx.quadraticCurveTo(300 + i * 25, 175, 315 + i * 25, 155);
+          ctx.stroke();
+        }
+      } else if (lower.includes('buku') || lower.includes('rak') || lower.includes('file') || lower.includes('berantakan') || lower.includes('dokumen')) {
+        // Shelf / Desk
+        ctx.fillStyle = '#222222';
+        ctx.fillRect(200, 390, 400, 18);
+        // Tilted colorful books / folders
+        const books = [
+          { x: 235, y: 260, w: 48, h: 130, c: '#e5252a', rot: -0.08 },
+          { x: 295, y: 245, w: 52, h: 145, c: '#3b6fd8', rot: 0.05 },
+          { x: 365, y: 270, w: 46, h: 120, c: '#f59e0b', rot: 0.22 },
+          { x: 445, y: 255, w: 54, h: 135, c: '#1f9d8a', rot: -0.15 },
+          { x: 510, y: 280, w: 45, h: 110, c: '#e5252a', rot: 0.12 },
+        ];
+        books.forEach(b => {
+          ctx.save();
+          ctx.translate(b.x + b.w / 2, b.y + b.h);
+          ctx.rotate(b.rot);
+          ctx.fillStyle = b.c;
+          ctx.fillRect(-b.w / 2, -b.h, b.w, b.h);
+          ctx.strokeRect(-b.w / 2, -b.h, b.w, b.h);
+          ctx.restore();
+        });
+      } else {
+        // Balanced geometric flat vector illustration (person/character silhouette + paths/objects)
+        // Floating cards / gears / nodes
+        ctx.fillStyle = primary;
+        ctx.beginPath();
+        ctx.roundRect(230, 220, 140, 110, 18);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = secondary;
+        ctx.beginPath();
+        ctx.roundRect(420, 190, 150, 120, 18);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = tertiary;
+        ctx.beginPath();
+        ctx.roundRect(310, 340, 180, 95, 18);
+        ctx.fill();
+        ctx.stroke();
+
+        // Connecting bold vector lines
+        ctx.beginPath();
+        ctx.moveTo(370, 275);
+        ctx.lineTo(420, 250);
+        ctx.moveTo(400, 310);
+        ctx.lineTo(400, 340);
+        ctx.stroke();
+
+        // Sparkle stars
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.arc(260, 170, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+      ctx.restore();
+      return canvas.toDataURL('image/png');
+    }
+
+    // =========================================================================
+    // GAYA GAMBAR (pilihan pengguna) + latar transparan lewat chroma-key
+    // =========================================================================
+    function getArtStylePrompt(activeStyle, promptObj, backgroundMode = "AUTO") {
+      const subject = typeof promptObj === 'string' ? promptObj : (promptObj?.prompt || promptObj?.caption || '');
+
+      const styles = {
+        FLAT_2D_VECTOR: `
+          Flat 2D vector illustration.
+          Clean bold black outlines, simple geometric shapes,
+          warm flat color palette, cream #faf6ef,
+          red #e5252a, blue #3b6fd8, teal #1f9d8a,
+          yellow #f59e0b, black #222222.
+          Crisp edges, balanced composition, minimal shading,
+          friendly educational infographic aesthetic.
+          No gradients unless needed for subtle depth.
+        `,
+        MODERN_2D_ILLUSTRATION: `
+          Modern editorial 2D illustration.
+          Bold simplified shapes, expressive silhouettes,
+          refined color harmony, layered flat colors,
+          subtle gradients, selective linework,
+          contemporary magazine illustration aesthetic.
+          Visually rich but uncluttered.
+        `,
+        EDITORIAL_ILLUSTRATION: `
+          Artistic editorial illustration.
+          Distinctive hand-crafted shapes, sophisticated colors,
+          expressive composition, subtle paper grain,
+          painterly details combined with graphic forms.
+          Professional magazine art direction,
+          visually memorable and conceptually clear.
+        `,
+        DOODLE_ART: `
+          Hand-drawn doodle illustration.
+          Playful imperfect black ink lines,
+          spontaneous sketch marks, simple colorful fills,
+          charming hand-drawn symbols and expressive shapes.
+          White or transparent-looking negative space,
+          energetic but readable composition.
+          No typography.
+        `,
+        PAPER_CUTOUT: `
+          Layered paper-cut illustration.
+          Distinct paper shapes, visible cut edges,
+          overlapping colored paper layers,
+          subtle realistic contact shadows,
+          tactile paper fibers and dimensional depth.
+          Sophisticated handcrafted appearance,
+          clean silhouette and controlled composition.
+        `,
+        REALISTIC_PHOTO: `
+          Photorealistic real-world photography.
+          Natural materials, authentic surface textures,
+          physically plausible lighting and shadows,
+          realistic proportions, accurate anatomy when applicable,
+          lifelike color response and optical depth.
+          Professional camera photography, not illustration,
+          not CGI, not plastic-looking.
+        `,
+        PRODUCT_PHOTOGRAPHY: `
+          High-end commercial product photography.
+          Preserve the exact product identity, geometry,
+          proportions, colors, material, packaging and details
+          described in the subject.
+          Realistic material textures, controlled studio lighting,
+          accurate highlights, natural contact shadows,
+          sharp product details and professional composition.
+          Do not redesign, invent or duplicate the product.
+        `,
+        "3D_CARTOON": `
+          High-quality stylized 3D cartoon render.
+          Expressive forms, appealing proportions,
+          smooth but physically plausible materials,
+          soft studio lighting, subtle ambient occlusion,
+          refined 3D modeling and clean silhouettes.
+          Polished animation-film aesthetic,
+          not a flat 2D illustration.
+        `,
+        "3D_CLAY": `
+          Handmade 3D clay art.
+          Sculpted clay forms, subtle fingerprints,
+          matte tactile surfaces, soft rounded shapes,
+          gentle studio lighting and natural contact shadows.
+          Charming handcrafted miniature sculpture aesthetic,
+          consistent material appearance.
+        `,
+        REALISTIC_MINIATURE: `
+          Photorealistic miniature-world photography.
+          Tiny human figures interacting with realistically
+          oversized versions of the specified subject when
+          appropriate to the concept.
+          Macro lens perspective, physically plausible scale,
+          detailed real-world materials, cinematic depth of field,
+          realistic lighting and miniature environmental details.
+          The main subject must remain recognizable and unchanged.
+          Not a toy-like product redesign, not a cartoon.
+        `
+      };
+
+      const backgroundInstructions = {
+        AUTO: `
+          Choose the background that best suits the visual style.
+          Use a coherent environment when the scene needs context.
+          Keep the subject clearly separated from its surroundings.
+        `,
+        CREAM: `
+          Use one flat, uniform cream background color #faf6ef.
+          No scenery, no texture, no gradients, no border, no frame.
+          Keep a generous empty cream margin around all edges.
+        `,
+        TRANSPARENT: `
+          Isolated subject on a genuinely transparent alpha channel.
+          No background scenery, no solid-color background,
+          no floor, no backdrop, no border, no frame.
+          Preserve fine edges, hair, fur and translucent details
+          when present. Keep all subject parts inside the canvas.
+          Do not simulate transparency using a checkerboard pattern.
+        `,
+        CHROMA: `
+          Place the subject on a perfectly flat, uniform, pure chroma-key
+          green background (#00FF00). The green must be one single flat color:
+          no gradient, no vignette, no texture, no floor, no cast shadow on
+          the background. Do not use any green or green-tinted color on the
+          subject itself. Keep a clean crisp edge between the subject and
+          the green, with comfortable margins on all sides.
+        `,
+        SOLID: `
+          Use one clean, uniform background color that contrasts
+          with the subject. No scenery, no texture, no gradients.
+        `,
+        STUDIO: `
+          Professional studio background with a subtle seamless
+          backdrop, realistic grounding shadows and controlled
+          lighting. No distracting objects.
+        `,
+        ENVIRONMENT: `
+          Create a coherent, realistic environment appropriate
+          to the subject, with natural depth, lighting and context.
+          Avoid unnecessary decorative objects.
+        `
+      };
+
+      const stylePrompt = styles[activeStyle] || styles.FLAT_2D_VECTOR;
+      const backgroundPrompt = backgroundInstructions[backgroundMode] || backgroundInstructions.AUTO;
+
+      const strictPrompt = `
+        ${stylePrompt}
+
+        SUBJECT:
+        ${subject}
+
+        BACKGROUND:
+        ${backgroundPrompt}
+
+        COMPOSITION:
+        One clear primary subject.
+        Strong visual hierarchy.
+        Balanced framing with comfortable margins.
+        No accidental cropping or duplicated objects.
+
+        TEXT RESTRICTIONS:
+        No text, letters, numbers, words, logos or watermarks.
+        Do not add UI elements, captions or decorative typography.
+
+        QUALITY:
+        High visual clarity, coherent shapes,
+        consistent lighting and clean subject boundaries.
+      `;
+      return strictPrompt.trim();
+    }
+
+    function getImageStyleSettings() {
+      const g = (id, d) => { const e = document.getElementById(id); return (e && e.value) || d; };
+      return { artStyle: g('cfgArtStyle', 'FLAT_2D_VECTOR'), bgMode: g('cfgImgBg', 'CREAM'), ratio: g('cfgImgRatio', '4:3') };
+    }
+
+    // BEGIN CHROMA (fungsi murni; diuji terpisah)
+    function chromaKeyPixels(d) {
+      for (let i = 0; i < d.length; i += 4) {
+        const r = d[i], g = d[i + 1], b = d[i + 2];
+        const dom = g - Math.max(r, b); // seberapa dominan hijau murni
+        if (g > 90 && dom > 28) {
+          const a = dom >= 90 ? 0 : 1 - (dom - 28) / 62; // 28..90 -> 1..0
+          d[i + 3] = Math.round(d[i + 3] * a);
+          if (a > 0) d[i + 1] = Math.min(g, Math.max(r, b)); // hilangkan sisa hijau di tepi
+        }
+      }
+    }
+    function alphaBounds(d, w, h, thr = 10) {
+      let x0 = w, y0 = h, x1 = -1, y1 = -1;
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          if (d[(y * w + x) * 4 + 3] > thr) {
+            if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+          }
+        }
+      }
+      return x1 < 0 ? null : { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
+    }
+    // END CHROMA
+
+    function loadImageEl(src) {
+      return new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => rej(new Error('Gambar gagal dibaca')); im.src = src; });
+    }
+    // Hapus latar hijau -> PNG transparan, lalu pangkas ruang kosong. fixedBox: pakai kotak potong yang sama (untuk pasangan sprite).
+    async function keyAndTrim(dataUrl, fixedBox) {
+      const im = await loadImageEl(dataUrl);
+      const c = document.createElement('canvas');
+      c.width = im.naturalWidth; c.height = im.naturalHeight;
+      const x = c.getContext('2d', { willReadFrequently: true });
+      x.drawImage(im, 0, 0);
+      const id = x.getImageData(0, 0, c.width, c.height);
+      chromaKeyPixels(id.data);
+      x.putImageData(id, 0, 0);
+      let b = fixedBox && fixedBox.cw === c.width && fixedBox.ch === c.height ? fixedBox : null;
+      if (!b) {
+        const ab = alphaBounds(id.data, c.width, c.height);
+        if (!ab) return { dataUrl, box: null }; // gagal menghapus latar: pakai gambar asli
+        const pad = Math.round(Math.max(ab.w, ab.h) * 0.04);
+        const sx = Math.max(0, ab.x - pad), sy = Math.max(0, ab.y - pad);
+        b = { x: sx, y: sy, w: Math.min(c.width - sx, ab.w + 2 * pad), h: Math.min(c.height - sy, ab.h + 2 * pad), cw: c.width, ch: c.height };
+      }
+      const o = document.createElement('canvas');
+      o.width = b.w; o.height = b.h;
+      o.getContext('2d').drawImage(c, b.x, b.y, b.w, b.h, 0, 0, b.w, b.h);
+      return { dataUrl: o.toDataURL('image/png'), box: b };
+    }
+    async function finishImage(rawDataUrl, wantAlpha) {
+      if (!wantAlpha) return rawDataUrl;
+      try { return (await keyAndTrim(rawDataUrl)).dataUrl; } catch (e) { return rawDataUrl; }
+    }
+
+    async function requestGeminiImage(text, ratio, refDataUrl) {
+      const parts = [];
+      if (refDataUrl) {
+        const m = refDataUrl.match(/^data:(.*?);base64,(.*)$/);
+        if (m) parts.push({ inlineData: { mimeType: m[1], data: m[2] } });
+      }
+      parts.push({ text });
+      let lastErr = null;
+      for (const model of [MODEL_IMAGE, MODEL_IMAGE_LITE]) {
+        try {
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+          const payload = { contents: [{ role: 'user', parts }], generationConfig: { responseModalities: ['IMAGE'], imageConfig: { aspectRatio: ratio } } };
+          const result = await fetchWithRetry(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }, 2);
+          const part = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+          if (part?.inlineData?.data) return `data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`;
+        } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('Model tidak mengembalikan gambar');
+    }
+
+    // =========================================================================
+    // GAMBAR MANUAL (screenshot / foto pengguna) dengan kata pemicu
+    // =========================================================================
+    function normWord(w) { return String(w || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+
+    async function addManualImageFile(file) {
+      const raw = await new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = () => rej(new Error('Gagal membaca file')); fr.readAsDataURL(file); });
+      const im = await loadImageEl(raw);
+      const k = Math.min(1, 1600 / Math.max(im.naturalWidth, im.naturalHeight));
+      const w = Math.max(1, Math.round(im.naturalWidth * k)), h = Math.max(1, Math.round(im.naturalHeight * k));
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      c.getContext('2d').drawImage(im, 0, 0, w, h);
+      const keepAlpha = /png|webp|gif/.test(file.type);
+      manualImages.push({
+        id: Date.now() + Math.random(), origName: file.name,
+        dataUrl: keepAlpha ? c.toDataURL('image/png') : c.toDataURL('image/jpeg', 0.9),
+        ext: keepAlpha ? 'png' : 'jpg', w, h,
+        hBlock: Math.max(380, Math.min(900, Math.round(932 * h / w))),
+        trigger: '', nth: 1, caption: '', fit: 'contain', hold: 0, status: ''
+      });
+    }
+
+    // Pasang gambar manual ke adegan yang memuat kata pemicu; gambar AI yang tergantikan dibuang dan sisanya dinomori ulang.
+    function applyManualImages(scenesObj, validImagePrompts) {
+      const scenes = scenesObj.scenes;
+      const last = scenes.length - 1;
+      const dropAiImage = (sc) => {
+        (sc.stage || []).forEach(b => {
+          if (b.type === 'image' && /^img\/img\d+\.png$/.test(b.src || '')) {
+            const k = validImagePrompts.findIndex(p => p.src === b.src);
+            if (k >= 0) validImagePrompts.splice(k, 1);
+          }
+        });
+      };
+      const put = (i, block) => { const sc = scenes[i]; dropAiImage(sc); sc.stage = [block]; delete sc.mascot; delete sc.pose; };
+
+      manualImages.forEach((m, mi) => {
+        m.fileName = 'manual' + String(mi + 1).padStart(2, '0') + '.' + m.ext;
+        m.src = 'img/' + m.fileName;
+        m.status = '';
+        const trig = normWord(m.trigger);
+        if (!trig) { m.status = 'Isi kata pemicu agar gambar tahu kapan muncul.'; return; }
+        const want = parseInt(m.nth, 10) || 1;
+        let seen = 0, sIdx = -1, atWord = '';
+        outer: for (let i = 0; i < scenes.length; i++) {
+          const words = getWordsArray(scenes[i].title).map(x => x.replace(/\*/g, ''));
+          for (const w of words) {
+            if (normWord(w).startsWith(trig)) {
+              seen++;
+              if (seen === want) { sIdx = i; atWord = w.replace(/[.,?!:;"]/g, ''); break outer; }
+            }
+          }
+        }
+        if (sIdx < 0) { m.status = 'Kata "' + m.trigger + '" (ke-' + want + ') tidak ditemukan di skrip.'; return; }
+        if (sIdx === last) { m.status = 'Kata itu ada di adegan terakhir (dipakai untuk penutup). Pilih kata lain.'; return; }
+        const caption = (m.caption || '').split(/\s+/).filter(Boolean).slice(0, 6).join(' ');
+        const base = { type: 'image', src: m.src, fit: m.fit === 'cover' ? 'cover' : 'contain', h: m.hBlock };
+        if (caption) base.caption = caption;
+        put(sIdx, { ...base, at: atWord });
+        let extra = 0;
+        for (let k = 1; k <= (parseInt(m.hold, 10) || 0) && sIdx + k < last; k++) { put(sIdx + k, { ...base, hold: true }); extra++; }
+        m.status = 'Terpasang di adegan ' + (sIdx + 1) + (extra ? ' dan ' + extra + ' adegan berikutnya' : '') + ' (muncul saat kata "' + atWord + '").';
+      });
+
+      // nomor ulang gambar AI yang tersisa supaya tetap img01, img02, ...
+      let n = 0; const map = {};
+      scenes.forEach(sc => (sc.stage || []).forEach(b => {
+        if (b.type === 'image' && /^img\/img\d+\.png$/.test(b.src || '')) { n++; const ns = 'img/img0' + n + '.png'; map[b.src] = ns; b.src = ns; }
+      }));
+      validImagePrompts.forEach(p => { if (map[p.src]) { p.src = map[p.src]; p.fileName = p.src.replace('img/', ''); } });
+    }
+
+    // Karakter sprite buatan AI (selalu transparan lewat chroma-key)
+    let charRaw = { idle: null, box: null };
+    async function generateCharacterSprite(kind) {
+      const status = document.getElementById('charGenStatus');
+      const st = getImageStyleSettings();
+      const setPrev = (id, url) => { const el2 = document.getElementById(id); if (el2) { el2.src = url; el2.classList.remove('hidden'); } };
+      try {
+        if (kind === 'idle') {
+          const desc = (document.getElementById('cfgCharPrompt').value || '').trim();
+          if (!desc) { status.textContent = 'Tulis dulu deskripsi karakter.'; return; }
+          status.textContent = `Membuat karakter (${st.artStyle})...`;
+          const subject = { prompt: desc + '. A single full-body character, front view, standing in a relaxed neutral pose with arms slightly away from the body, mouth closed, entire body visible from head to feet, centered.' };
+          const raw = await requestGeminiImage(getArtStylePrompt(st.artStyle, subject, 'CHROMA'), '3:4');
+          const keyed = await keyAndTrim(raw);
+          charRaw = { idle: raw, box: keyed.box, desc };
+          charSprites.idle = { dataUrl: keyed.dataUrl, fileName: 'ai-idle.png' };
+          charSprites.talk = null;
+          setPrev('charPrevIdle', keyed.dataUrl);
+          document.getElementById('charPrevTalk').classList.add('hidden');
+          document.getElementById('spriteIdleName').textContent = `Terpilih: Karakter buatan AI (${st.artStyle})`;
+          status.textContent = 'Selesai. Bila kurang pas, klik lagi untuk membuat ulang. Lalu buat versi mulut terbuka (opsional).';
+        } else {
+          if (!charRaw.idle) { status.textContent = 'Buat karakter diam dulu.'; return; }
+          status.textContent = `Membuat versi mulut terbuka (${st.artStyle})...`;
+          const talkPrompt = `In the exact same ${st.artStyle} visual style, maintain the exact same character design, clothing, colors, proportions, size, front view full-body standing pose, and flat pure green (#00FF00) chroma background. Only modify the facial expression so the mouth is open speaking or talking expressively. Change nothing else. No text, no logos.`;
+          const raw = await requestGeminiImage(talkPrompt, '3:4', charRaw.idle);
+          const keyed = await keyAndTrim(raw, charRaw.box);
+          charSprites.talk = { dataUrl: keyed.dataUrl, fileName: 'ai-talk.png' };
+          setPrev('charPrevTalk', keyed.dataUrl);
+          document.getElementById('spriteTalkName').textContent = `Terpilih: Mulut terbuka buatan AI (${st.artStyle})`;
+          status.textContent = 'Selesai. Versi mulut terbuka siap digunakan untuk lip-sync!';
+        }
+      } catch (e) {
+        status.textContent = 'Gagal: ' + (e.message || e) + (apiKey ? '' : ' (API Key kosong? isi di kartu Akses Gemini)');
+      }
+    }
+
+    async function generateSingleImageWithAI(promptObj, index, mode = "auto") {
+      const fallbackDataUrl = createFlatVectorCanvasDataUrl(promptObj, index);
+      if (mode === "prompt_only") {
+        return { ...promptObj, dataUrl: fallbackDataUrl, source: "vector-fallback" };
+      }
+
+      // Enforce strict visual rules in prompt
+      const imgSt = getImageStyleSettings();
+      const wantAlpha = imgSt.bgMode === "TRANSPARENT";
+      const strictPrompt = getArtStylePrompt(imgSt.artStyle, promptObj, wantAlpha ? "CHROMA" : imgSt.bgMode);
+
+      try {
+        // Try gemini-3.1-flash-image first with 4:3 aspectRatio
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_IMAGE}:generateContent?key=${apiKey}`;
+        const payload = {
+          contents: [{ role: 'user', parts: [{ text: strictPrompt }] }],
+          generationConfig: {
+            responseModalities: ['IMAGE'],
+            imageConfig: { aspectRatio: imgSt.ratio }
+          }
+        };
+
+        const result = await fetchWithRetry(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }, 2);
+
+        const part = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+        if (part?.inlineData?.data) {
+          return {
+            ...promptObj,
+            dataUrl: await finishImage(`data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`, wantAlpha),
+            source: "gemini-image"
+          };
+        }
+      } catch (e) {
+        // Fallback to gemini-3.1-flash-lite-image if needed
+        try {
+          const liteUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_IMAGE_LITE}:generateContent?key=${apiKey}`;
+          const litePayload = {
+            contents: [{ parts: [{ text: strictPrompt }] }],
+            generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
+          };
+          const liteRes = await fetchWithRetry(liteUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(litePayload)
+          }, 1);
+          const part = liteRes?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+          if (part?.inlineData?.data) {
+            return {
+              ...promptObj,
+              dataUrl: await finishImage(`data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`, wantAlpha),
+              source: "gemini-lite-image"
+            };
+          }
+        } catch (err2) {
+          // Proceed with clean flat vector fallback + ready-to-use prompt
+        }
+      }
+
+      return { ...promptObj, dataUrl: fallbackDataUrl, source: "vector-fallback" };
+    }
+
+    // =========================================================================
+    // RENDER OUTPUTS (1 TO 5) & 9:16 INTERACTIVE STAGE SIMULATOR
+    // =========================================================================
+    function renderAllOutputs(summaryTopic, scenesObj, srtString, imagesArray) {
+      const numScenes = scenesObj.scenes?.length || 0;
+      const numImages = imagesArray.length;
+      const folderName = (el.inputVideoFolder.value || 'video-explainer').trim().replace(/[^a-zA-Z0-9_-]/g, '-');
+      el.zipFolderHint.textContent = `public/${folderName}/`;
+
+      // 1) Satu kalimat ringkasan: topik, jumlah adegan, jumlah gambar
+      const summarySentence = `Video membahas ${summaryTopic} dalam ${numScenes} adegan dan menggunakan ${numImages} gambar ilustrasi.`;
+      el.outSummaryText.textContent = summarySentence;
+
+      // 1b) Visi Sutradara & Visual Intent
+      const dirSection = document.getElementById('outDirectorSection');
+      if (dirSection && currentDirectorVision) {
+        dirSection.classList.remove('hidden');
+        const sArc = currentDirectorVision.storyArc || {};
+        const vTh = currentDirectorVision.visualTheme || {};
+        const setTxt = (id, val) => {
+          const elm = document.getElementById(id);
+          if (elm) elm.textContent = val || '-';
+        };
+        setTxt('dirHook', sArc.hook);
+        setTxt('dirProblem', sArc.problem);
+        setTxt('dirSolution', sArc.solution);
+        setTxt('dirCta', sArc.cta);
+        setTxt('dirMetaphor', vTh.coreMetaphor);
+        setTxt('dirAnchor', vTh.visualAnchor);
+        setTxt('dirMood', vTh.mood);
+        setTxt('dirPacing', vTh.pacingStrategy);
+
+        const btnTog = document.getElementById('btnToggleDirector');
+        if (btnTog && !btnTog._hasListener) {
+          btnTog._hasListener = true;
+          btnTog.addEventListener('click', () => {
+            const body = document.getElementById('outDirectorBody');
+            if (body) body.classList.toggle('hidden');
+          });
+        }
+      }
+
+      // 2) voiceover.srt
+      el.outSrtCode.textContent = srtString;
+      if (inputMode === "mp3") {
+        el.srtSourceBadge.textContent = "Dihasilkan dari Audio MP3";
+        el.srtSourceBadge.className = "text-[11px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30";
+        el.mp3SrtNotice.classList.remove('hidden');
+      } else {
+        el.srtSourceBadge.textContent = "Sumber: Input SRT Utuh";
+        el.srtSourceBadge.className = "text-[11px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30";
+        el.mp3SrtNotice.classList.add('hidden');
+      }
+
+      // 3) Gambar-gambar (img01.png, dst.) + Prompt Bahasa Inggris
+      el.outImageCountBadge.textContent = `${numImages} gambar`;
+      if (numImages === 0) {
+        el.outImagesContainer.innerHTML = `
+          <div class="col-span-full rounded-xl bg-slate-950 border border-slate-800 p-5 text-center text-xs text-slate-400">
+            Video ini menggunakan blok bawaan sepenuhnya (0 blok <code class="font-mono">image</code>). Tidak ada file gambar tambahan yang perlu diunduh.
+          </div>`;
+      } else {
+        el.outImagesContainer.innerHTML = imagesArray.map((img, idx) => `
+          <div class="rounded-xl bg-slate-950 border border-slate-800 overflow-hidden flex flex-col justify-between">
+            <div>
+              <div class="px-3.5 py-2 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+                <span class="font-mono text-xs font-bold text-white flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-remotionRed"></span>
+                  ${img.fileName}
+                </span>
+                <span class="text-[10px] text-slate-400 truncate max-w-[150px]">${img.caption || ''}</span>
+              </div>
+              <div class="aspect-[4/3] bg-[#faf6ef] relative overflow-hidden flex items-center justify-center border-b border-slate-800">
+                <img src="${img.dataUrl}" alt="${img.fileName}" class="w-full h-full object-cover" />
+              </div>
+              <div class="p-3 space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Prompt Seragam (EN):</span>
+                  <button type="button" onclick="copyImagePrompt(${idx})" class="text-[10px] text-blue-400 hover:underline">Salin Prompt</button>
+                </div>
+                <p class="text-[11px] font-mono text-slate-300 bg-slate-900/90 p-2 rounded-lg border border-slate-800/80 line-clamp-3" title="${img.prompt.replace(/"/g, '&quot;')}">${img.prompt}</p>
+              </div>
+            </div>
+            <div class="px-3 pb-3 flex items-center gap-2">
+              <button type="button" onclick="downloadSingleImage(${idx})" class="flex-1 py-1.5 px-2.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition">
+                Unduh ${img.fileName}
+              </button>
+              <button type="button" id="btnRegen_${idx}" onclick="regenerateSingleImage(${idx})" class="py-1.5 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs transition" title="Buat ulang gambar dengan AI">
+                &#8635; Buat Ulang
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 4) scenes.src.json
+      el.outJsonTextarea.value = isPrettyJson
+        ? JSON.stringify(scenesObj, null, 2)
+        : JSON.stringify(scenesObj);
+      el.jsonValidBadge.textContent = "JSON Valid (Skema Patuh)";
+      el.jsonValidBadge.className = "text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+
+      // 5) Instruksi singkat (maks 5 baris)
+      const imgListText = numImages > 0
+        ? `Daftar gambar yang harus diunduh dan ditaruh di folder public/${folderName}/img/: ${imagesArray.map(i => i.fileName).join(', ')}.`
+        : `Video ini tidak memakai blok image (0 gambar), sehingga folder img/ bisa dikosongkan.`;
+
+      const instructionLines = [
+        `Buat folder public/${folderName}/ di GitHub, upload: voiceover.mp3, voiceover.srt, scenes.src.json, dan folder img/ berisi gambar (nama file harus persis).`,
+        `Lalu jalankan Action Render Video di tab GitHub Actions.`,
+        imgListText
+      ].join('\n');
+      el.outInstructionsText.textContent = instructionLines;
+
+      // Enable ZIP Download
+      el.btnDownloadZip.disabled = false;
+
+      // Render 9:16 Stage Simulator
+      currentPreviewIndex = 0;
+      renderStagePreview(currentPreviewIndex);
+    }
+
+    // Global handlers for image cards
+    window.copyImagePrompt = function(idx) {
+      const item = generatedImages[idx];
+      if (item) copyTextToClipboard(`${item.fileName}: ${item.prompt}`, `Prompt ${item.fileName}`);
+    };
+
+    window.downloadSingleImage = async function(idx) {
+      const item = generatedImages[idx];
+      if (!item || !item.dataUrl) return;
+      const res = await fetch(item.dataUrl);
+      const blob = await res.blob();
+      downloadBlob(blob, item.fileName);
+      showToast(`${item.fileName} diunduh!`);
+    };
+
+    window.regenerateSingleImage = async function(idx) {
+      const item = generatedImages[idx];
+      if (!item) return;
+      const btn = document.getElementById(`btnRegen_${idx}`);
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "Membuat...";
+      }
+      try {
+        const updated = await generateSingleImageWithAI(item, idx, "auto");
+        generatedImages[idx] = updated;
+        renderAllOutputs(
+          currentScenesJson.tag || currentTopic,
+          currentScenesJson,
+          currentSrtString,
+          generatedImages
+        );
+        showToast(`${item.fileName} berhasil diperbarui!`);
+      } catch (e) {
+        showError(`Gagal membuat ulang ${item.fileName}: ${e.message}`);
+      }
+    };
+
+    // =========================================================================
+    // 9:16 INTERACTIVE STAGE PREVIEW RENDERER
+    // =========================================================================
+    function renderStagePreview(index) {
+      if (!currentScenesJson || !Array.isArray(currentScenesJson.scenes) || currentScenesJson.scenes.length === 0) {
+        return;
+      }
+      const scenes = currentScenesJson.scenes;
+      const safeIdx = Math.max(0, Math.min(index, scenes.length - 1));
+      currentPreviewIndex = safeIdx;
+      const sc = scenes[safeIdx];
+
+      el.sceneCounterLabel.textContent = `${safeIdx + 1}/${scenes.length} adegan`;
+      el.scrubberSceneIndex.textContent = `Adegan ${safeIdx + 1} (${sc.start}s)`;
+      el.btnPrevScene.disabled = safeIdx === 0;
+      el.btnNextScene.disabled = safeIdx === scenes.length - 1;
+
+      el.prevBrand.textContent = currentScenesJson.brand || "";
+      el.prevTag.textContent = currentScenesJson.tag || "";
+
+      // Split small words vs main title words
+      const rawTokens = (sc.title || '').trim().split(/\s+/);
+      const smallCount = Math.min(sc.small || 0, rawTokens.length);
+      const smallTokens = rawTokens.slice(0, smallCount);
+      const mainTokens = rawTokens.slice(smallCount);
+
+      el.prevSmallText.textContent = stripStars(smallTokens.join(' '));
+      el.prevTitleText.innerHTML = mainTokens.map(tok => {
+        if (tok.startsWith('*') && tok.endsWith('*') && tok.length > 2) {
+          const clean = tok.slice(1, -1);
+          return `<span class="px-1 rounded bg-[#e5252a] text-white">${clean}</span>`;
+        }
+        return tok.replace(/\*/g, '');
+      }).join(' ');
+
+      // Render Stage Blocks
+      const stage = sc.stage || [];
+      if (stage.length === 0) {
+        el.prevStageContainer.innerHTML = `<div class="text-center text-[11px] text-slate-400 italic">Adegan penghubung (stage kosong)</div>`;
+      } else {
+        el.prevStageContainer.innerHTML = stage.map(b => renderSingleBlockPreview(b)).join('');
+      }
+
+      // Render Mascot & Time
+      if (sc.mascot) {
+        const charEmoji = currentScenesJson.char === 'girl' ? 'ðŸ‘©' : currentScenesJson.char === 'robot' ? 'ðŸ¤–' : 'ðŸ‘”';
+        const alignLabel = sc.mascot === 'left' ? 'Kiri â˜›' : sc.mascot === 'right' ? 'â˜š Kanan' : 'Tengah';
+        el.prevMascotSlot.innerHTML = `
+          <span class="w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center text-sm shadow">${charEmoji}</span>
+          <div>
+            <div class="text-[10px] font-extrabold text-slate-800 uppercase">${currentScenesJson.char} Â· ${sc.pose || 'idle'}</div>
+            <div class="text-[9px] text-slate-500">Posisi: ${alignLabel}</div>
+          </div>`;
+      } else {
+        el.prevMascotSlot.innerHTML = `<span class="text-[10px] text-slate-400 italic">Tanpa maskot</span>`;
+      }
+      el.prevTimeSlot.textContent = `start: ${sc.start}s`;
+    }
+
+    function renderSingleBlockPreview(b) {
+      const atBadge = b.at !== undefined ? `<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 border border-amber-300">at: ${b.at}</span>` : '';
+      if (b.type === 'window') {
+        const rowsHtml = (b.rows || []).map(r => {
+          if (r.k === 'bubble') {
+            const isUser = r.from === 'user';
+            return `<div class="text-[10px] px-2 py-1 rounded-lg ${isUser ? 'bg-blue-100 text-blue-900 ml-4' : 'bg-slate-100 text-slate-800 mr-4'}">${r.text || ''}</div>`;
+          }
+          if (r.k === 'check') {
+            const icon = r.state === 'done' ? 'âœ…' : r.state === 'busy' ? 'â³' : 'â¬œ';
+            return `<div class="text-[10px] flex items-center gap-1 text-slate-700"><span>${icon}</span><span>${r.text || ''}</span></div>`;
+          }
+          if (r.k === 'buttons') {
+            return `<div class="flex gap-1 pt-0.5">${(r.items || []).map(it => `<span class="text-[9px] px-2 py-0.5 rounded bg-slate-800 text-white">${it}</span>`).join('')}</div>`;
+          }
+          return `<div class="text-[10px] text-slate-700 bg-slate-50 px-2 py-0.5 rounded border border-slate-200">${r.text || r.k}</div>`;
+        }).join('');
+        return `
+          <div class="rounded-xl bg-white border-2 border-slate-800 shadow-sm overflow-hidden">
+            <div class="px-2.5 py-1 text-[10px] font-bold text-white flex items-center justify-between" style="background:${b.tone || '#3b6fd8'}">
+              <span>${b.title || 'Window'}</span>
+              ${atBadge}
+            </div>
+            <div class="p-2 space-y-1">${rowsHtml}</div>
+          </div>`;
+      }
+      if (b.type === 'compare') {
+        return `
+          <div class="grid grid-cols-2 gap-1.5">
+            <div class="rounded-lg bg-white border-2 border-slate-800 overflow-hidden">
+              <div class="px-2 py-0.5 text-[9px] font-bold text-white" style="background:${b.left?.tone || '#3b6fd8'}">${b.left?.title || 'Kiri'}</div>
+              <ul class="p-1.5 text-[9px] space-y-0.5 text-slate-700">${(b.left?.items || []).map(i => `<li>â€¢ ${i}</li>`).join('')}</ul>
+            </div>
+            <div class="rounded-lg bg-white border-2 border-slate-800 overflow-hidden">
+              <div class="px-2 py-0.5 text-[9px] font-bold text-white" style="background:${b.right?.tone || '#1f9d8a'}">${b.right?.title || 'Kanan'}</div>
+              <ul class="p-1.5 text-[9px] space-y-0.5 text-slate-700">${(b.right?.items || []).map(i => `<li>â€¢ ${i}</li>`).join('')}</ul>
+            </div>
+          </div>`;
+      }
+      if (b.type === 'tree') {
+        return `
+          <div class="rounded-xl bg-white border-2 border-slate-800 p-2">
+            <div class="flex justify-between items-center mb-1"><span class="text-[9px] font-bold uppercase text-slate-400">Tree</span>${atBadge}</div>
+            <div class="grid grid-cols-${Math.min(3, (b.cols || []).length || 2)} gap-1 text-center">
+              ${(b.cols || []).map(c => `
+                <div class="rounded bg-slate-100 p-1 border border-slate-300">
+                  <div class="text-[9px] font-bold text-slate-900">${c.head || ''}</div>
+                  ${c.mid ? `<div class="text-[8px] text-blue-700">${c.mid}</div>` : ''}
+                  ${c.low ? `<div class="text-[8px] text-emerald-700 font-semibold">${c.low}</div>` : ''}
+                </div>`).join('')}
+            </div>
+          </div>`;
+      }
+      if (b.type === 'meter') {
+        return `
+          <div class="rounded-xl bg-white border-2 border-slate-800 p-2.5 shadow-sm">
+            <div class="text-[10px] font-bold text-slate-900 flex justify-between"><span>${b.title || 'Meter'}</span><span class="text-[#e5252a]">${b.pct ?? 0}%</span></div>
+            <div class="h-2 mt-1 rounded bg-slate-200 overflow-hidden"><div class="h-full bg-[#e5252a]" style="width:${b.pct ?? 0}%"></div></div>
+          </div>`;
+      }
+      if (b.type === 'bars') {
+        return `
+          <div class="rounded-xl bg-white border-2 border-slate-800 p-2.5 shadow-sm">
+            <div class="text-[10px] font-bold text-slate-900">${b.title || 'Grafik'}</div>
+            <div class="flex items-end gap-1 h-12 mt-1">${(b.bars || []).map((x, i) => `<div class="flex-1 rounded-t ${i === b.hi ? 'bg-[#e5252a]' : 'bg-slate-300'}" style="height:${x.value}%"></div>`).join('')}</div>
+          </div>`;
+      }
+      if (b.type === 'image') {
+        const matched = generatedImages.find(img => img.src === b.src) || manualImages.find(m => m.src === b.src);
+        return `
+          <div class="rounded-xl bg-white border-2 border-slate-800 overflow-hidden shadow-sm">
+            ${matched?.dataUrl ? `<img src="${matched.dataUrl}" class="w-full h-28 object-cover border-b border-slate-200" />` : `<div class="h-24 bg-amber-50 flex items-center justify-center text-[10px] font-mono">${b.src}</div>`}
+            <div class="px-2 py-1 text-[9px] font-semibold text-slate-700 text-center">${b.caption || b.src}</div>
+          </div>`;
+      }
+      if (b.type === 'stat') {
+        return `
+          <div class="rounded-xl bg-white border-2 border-slate-800 p-2.5 text-center shadow-sm">
+            <div class="text-xl font-extrabold text-[#e5252a]">${b.value || '87%'}</div>
+            <div class="text-[10px] font-semibold text-slate-700">${b.label || ''}</div>
+          </div>`;
+      }
+      if (b.type === 'dialog') {
+        return `
+          <div class="rounded-xl bg-white border-2 border-slate-800 p-2.5 space-y-1 shadow-sm">
+            <div class="text-[10px] font-bold text-slate-900">${b.title || 'Dialog'}</div>
+            <div class="text-[10px] text-slate-700">${b.text || ''}</div>
+            ${b.sub ? `<div class="text-[8px] text-slate-500">${b.sub}</div>` : ''}
+            <div class="flex gap-1 pt-1">${(b.buttons || []).map(btn => `<span class="text-[9px] px-2 py-0.5 rounded bg-slate-900 text-white font-semibold">${btn}</span>`).join('')}</div>
+          </div>`;
+      }
+      if (b.type === 'list') {
+        return `
+          <div class="rounded-xl bg-white border-2 border-slate-800 p-2 space-y-1 shadow-sm">
+            <div class="text-[10px] font-bold text-slate-900 flex justify-between"><span>${b.title || 'List'}</span>${atBadge}</div>
+            <ul class="text-[9px] text-slate-700 space-y-0.5">${(b.items || []).map(it => `<li>âœ“ ${it}</li>`).join('')}</ul>
+          </div>`;
+      }
+      if (b.type === 'files') {
+        return `
+          <div class="rounded-xl bg-white border-2 border-slate-800 p-2 text-center shadow-sm">
+            <div class="text-[10px] font-bold text-slate-800">ðŸ“ ${b.title || 'Files'}</div>
+            <div class="text-[9px] text-slate-600">${b.groups ? b.groups.join(' Â· ') : `${b.n || 12} file`}</div>
+          </div>`;
+      }
+      if (['terminal', 'browser', 'phone', 'chip', 'tiles', 'kpi', 'notifs', 'icons', 'profile', 'brand'].includes(b.type)) {
+        const esc2 = (v) => String(v == null ? '' : v).replace(/[&<>]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch]));
+        const lines = (b.lines || []).map(l => esc2(l.text)).join('<br>') || (b.rows || []).map(r => esc2(r.text)).join('<br>') || (b.cols || []).map(c => esc2(c.head)).join(' · ') || (b.notifs || []).map(n => esc2(n.text)).join('<br>') || (b.icons || []).map(i => esc2((i.glyph || '') + ' ' + (i.label || ''))).join(' → ') || esc2(b.value || b.sub || b.url || '');
+        return `
+          <div class="rounded-xl bg-slate-900 text-slate-100 border-2 border-slate-700 p-2 shadow-sm space-y-0.5">
+            <div class="text-[9px] font-mono text-cyan-300 uppercase">${b.type}</div>
+            <div class="text-[10px] font-bold">${esc2(b.title || '')}</div>
+            <div class="text-[9px] font-mono text-slate-300">${lines}</div>
+          </div>`;
+      }
+      // Default: callout
+      return `
+        <div class="rounded-xl bg-white border-2 border-slate-800 p-2.5 text-center space-y-1 shadow-sm">
+          <div class="text-[11px] font-extrabold text-slate-900">${b.title || 'Callout'}</div>
+          ${b.sub ? `<div class="text-[9px] text-slate-600">${b.sub}</div>` : ''}
+          ${b.cta ? `<div class="inline-block px-2.5 py-0.5 rounded-full bg-[#e5252a] text-white text-[9px] font-bold">${b.cta}</div>` : ''}
+        </div>`;
+    }
+
+    // =========================================================================
+    // MAIN PIPELINE ORCHESTRATOR (LANGKAH 0 -> LANGKAH 6)
+    // =========================================================================
+    async function runFullPipeline() {
+      hideError();
+      const rawSrtInput = el.srtTextarea.value.trim();
+      const hasSrtText = parseSrt(rawSrtInput).length > 0;
+      const hasMp3 = !!uploadedMp3Base64;
+
+      if (!hasSrtText && !hasMp3) {
+        showError("Silakan tempelkan isi file SRT, unggah file .srt, atau unggah file audio .mp3 terlebih dahulu.");
+        return;
+      }
+
+      el.btnProcess.disabled = true;
+      const settings = {
+        brand: el.cfgBrand.value.trim() || "NamaBrandSaya",
+        cta: el.cfgCta.value.trim() || "Link-nya di bio",
+        tag: el.inputTag.value.trim(),
+        char: el.cfgChar.value || "boss",
+        accent: el.cfgAccent.value.trim() || "#e5252a",
+        imageMode: el.cfgImageMode.value || "auto",
+        showHeader: document.getElementById('cfgShowHeader').checked,
+        showTag: document.getElementById('cfgShowTag').checked,
+        showCta: document.getElementById('cfgShowCta').checked,
+        charStyle: document.getElementById('cfgCharStyle').value || "block",
+        textColor: document.getElementById('cfgTextAuto').checked ? "" : document.getElementById('cfgTextColor').value,
+        transitions: Array.from(document.querySelectorAll('.cfgTrans:checked')).map(x => x.value),
+        transitionsMode: document.getElementById('cfgTransMode').value || "cycle",
+        backgrounds: Array.from(document.querySelectorAll('.cfgBg:checked')).map(x => x.value),
+        bgMode: document.getElementById('cfgBgMode').value || "single",
+        bgEvery: Math.max(1, parseInt(document.getElementById('cfgBgEvery').value, 10) || 3),
+        audioMusic: document.getElementById('cfgAudioMusic').checked,
+        audioSfx: document.getElementById('cfgAudioSfx').checked,
+        audioBlock: document.getElementById('cfgAudioBlock').checked,
+        imageStyle: getImageStyleSettings(),
+        theme: (document.querySelector('input[name="cfgTheme"]:checked') || {}).value || 'clean',
+        handle: ((document.getElementById('cfgHandle') || {}).value || '').trim(),
+        stepLabel: ((document.getElementById('cfgStepLabel') || {}).value || 'Langkah').trim() || 'Langkah'
+      };
+
+      try {
+        // LANGKAH 0: INPUT (SRT atau Transkripsi MP3)
+        let activeSrtText = rawSrtInput;
+        if (!hasSrtText && hasMp3) {
+          setProgress(0, "Langkah 0: Transkripsi Audio MP3 ke SRT...", "Mentranskripsikan kata persis seperti diucapkan (2-5 detik per entri)...", 15);
+          activeSrtText = await transcribeMp3ToSrt(uploadedMp3Base64, uploadedMp3MimeType);
+          el.srtTextarea.value = activeSrtText;
+          updateInputStatusUI();
+        } else {
+          setProgress(0, "Langkah 0: Memvalidasi Input SRT...", "Memakai SRT apa adanya sebagai sumber kata dan waktu...", 15);
+        }
+
+        const srtEntries = parseSrt(activeSrtText);
+        if (srtEntries.length === 0) {
+          throw new Error("Format SRT tidak terbaca atau kosong. Pastikan terdapat penanda waktu seperti 00:00:00,000 --> 00:00:03,000.");
+        }
+        currentSrtString = activeSrtText;
+
+        // LANGKAH 1/6: ANALISIS SUTRADARA & VISUAL INTENT
+        setProgress(1, "Langkah 1/6: Analisis Sutradara & Visual Intent...", "Membedah alur narasi, emosi, tempo, & metafora visual kunci...", 25);
+        const directorVision = await analyzeDirectorVision(srtEntries, settings);
+        currentDirectorVision = directorVision;
+
+        // LANGKAH 2/6: PENYUSUNAN STORYBOARD & ADEGAN
+        setProgress(2, "Langkah 2/6: Menyusun Storyboard & Adegan...", "Menerapkan visi sutradara ke 100% kata SRT, memilih visual blok & tempo ucapan...", 48);
+        const aiRawPlan = await generateScenesPlanWithAI(srtEntries, settings, directorVision);
+
+        // LANGKAH 3/6: VALIDASI PRESISI KATA SRT & SKEMA JSON
+        setProgress(3, "Langkah 3/6: Memeriksa Kesesuaian Kata SRT & Skema JSON...", "Memastikan gabungan seluruh title == seluruh kata SRT tanpa ada kata yang berubah...", 65);
+        const { summaryTopic, scenesObj, validImagePrompts } = enforceAndValidateScenes(aiRawPlan, srtEntries, settings);
+        currentScenesJson = scenesObj;
+        currentTopic = summaryTopic || currentTopic;
+        if (window.renderManualList) window.renderManualList();
+
+        // LANGKAH 4/6: BUAT GAMBAR SATU PER SATU (bila ada blok image)
+        generatedImages = [];
+        if (validImagePrompts.length > 0) {
+          for (let i = 0; i < validImagePrompts.length; i++) {
+            const pObj = validImagePrompts[i];
+            const pct = 68 + Math.round(((i + 1) / validImagePrompts.length) * 24);
+            setProgress(4, `Langkah 4/6: Membuat Gambar ${pObj.fileName} (${i + 1}/${validImagePrompts.length})...`, `Menggambar ilustrasi metaforis untuk "${pObj.caption}"...`, pct);
+            const imgResult = await generateSingleImageWithAI(pObj, i, settings.imageMode);
+            generatedImages.push(imgResult);
+
+            // Jeda aman anti-error 429 (rate limiting Google Gemini) jika masih ada gambar berikutnya
+            if (i < validImagePrompts.length - 1 && settings.imageMode !== "prompt_only") {
+              await new Promise(r => setTimeout(r, 1400));
+            }
+          }
+        }
+
+        // LANGKAH 5/6: PEMERIKSAAN DIRI 7 POIN & SIMULATOR REMOTION
+        setProgress(5, "Langkah 5/6: Pemeriksaan Diri 7 Poin & Validasi Skema...", "Memvalidasi seluruh adegan, batas small, dan kepatuhan Remotion...", 95);
+        const checks = runSevenPointCheck(currentScenesJson, srtEntries);
+        renderSelfCheckList(checks);
+
+        // Tampilkan seluruh keluaran dengan urutan tetap 1-5
+        renderAllOutputs(summaryTopic, currentScenesJson, currentSrtString, generatedImages);
+
+        // LANGKAH 6/6: SELESAI
+        setProgress(6, "Langkah 6/6: Selesai! Video & Gambar Berstandar Sutradara Siap Dipakai", "Seluruh langkah pemeriksaan dan validasi telah lulus 100%.", 100);
+        setTimeout(() => {
+          el.pipelineProgressBox.classList.add('hidden');
+        }, 1800);
+        showToast("scenes.src.json & gambar selesai disusun!");
+
+      } catch (err) {
+        console.error(err);
+        let msg = err.message || "Terjadi kesalahan saat memproses narasi.";
+        if (/HTTP (400|401|403)/.test(msg) && !apiKey) msg += " â€” API Key kosong. Jika tool ini dibuka di luar Canvas Gemini, isi API Key di Pengaturan & Tampilan.";
+        if (/HTTP 404/.test(msg)) msg += " â€” Nama model tidak ditemukan. Periksa nama model di Pengaturan & Tampilan > Lanjutan.";
+        showError(msg);
+        el.pipelineProgressBox.classList.add('hidden');
+      } finally {
+        el.btnProcess.disabled = false;
+      }
+    }
+
+    // =========================================================================
+    // ZIP BUNDLER (PUBLIC/<NAMAVIDEO>/ GITHUB READY)
+    // =========================================================================
+    async function downloadGitHubReadyZip() {
+      if (!currentScenesJson) return;
+      const folderName = (el.inputVideoFolder.value || 'video-explainer').trim().replace(/[^a-zA-Z0-9_-]/g, '-');
+      const zip = new JSZip();
+      const rootFolder = zip.folder(`public/${folderName}`);
+
+      // 1. scenes.src.json
+      rootFolder.file("scenes.src.json", JSON.stringify(currentScenesJson, null, 2));
+
+      // 1b. gambar karakter sprite (bila dipakai)
+      if (currentScenesJson.charStyle === "sprite") {
+        const charFolder = rootFolder.folder("char");
+        if (charSprites.idle) charFolder.file("idle.png", charSprites.idle.dataUrl.split(',')[1], { base64: true });
+        if (charSprites.talk) charFolder.file("talk.png", charSprites.talk.dataUrl.split(',')[1], { base64: true });
+      }
+
+      // 2. voiceover.srt
+      if (currentSrtString) {
+        rootFolder.file("voiceover.srt", currentSrtString);
+      }
+
+      // 3. voiceover.mp3 (if uploaded by user)
+      if (uploadedMp3File) {
+        rootFolder.file("voiceover.mp3", uploadedMp3File);
+      }
+
+      // 4. img/ folder with img01.png, ...
+      const imgFolder = rootFolder.folder("img");
+      for (const imgItem of generatedImages) {
+        if (imgItem.dataUrl) {
+          const base64Part = imgItem.dataUrl.split(',')[1];
+          if (base64Part) {
+            imgFolder.file(imgItem.fileName, base64Part, { base64: true });
+          }
+        }
+      }
+
+      // gambar manual yang berhasil terpasang
+      for (const m of manualImages) {
+        if (m.src && m.dataUrl && m.status && m.status.indexOf('Terpasang') === 0) {
+          imgFolder.file(m.fileName, m.dataUrl.split(',')[1], { base64: true });
+        }
+      }
+
+      const content = await zip.generateAsync({ type: "blob" });
+      downloadBlob(content, `${folderName}-remotion-bundle.zip`);
+      showToast(`Bundel public/${folderName}/ berhasil diunduh!`);
+    }
+
+    // =========================================================================
+    // EVENT LISTENERS
+    // =========================================================================
+    el.btnToggleSettings.addEventListener('click', () => {
+      el.settingsPanel.classList.toggle('hidden');
+    });
+
+    el.btnLoadDemo.addEventListener('click', () => {
+      el.srtTextarea.value = DEMO_SRT;
+      el.inputTag.value = "dasar Â· AI agent";
+      el.inputVideoFolder.value = "ai-agent-dasar";
+      updateInputStatusUI();
+      showToast("Contoh SRT dimuat! Klik 'Susun Scenes' untuk memproses.");
+    });
+
+    el.btnClearSrt.addEventListener('click', () => {
+      el.srtTextarea.value = "";
+      el.fileSrt.value = "";
+      el.srtFileName.textContent = "Klik untuk pilih file .srt";
+      el.srtFileClear.classList.add('hidden');
+      updateInputStatusUI();
+    });
+
+    el.srtTextarea.addEventListener('input', updateInputStatusUI);
+
+    el.inputVideoFolder.addEventListener('input', () => {
+      const folderName = (el.inputVideoFolder.value || 'video-explainer').trim().replace(/[^a-zA-Z0-9_-]/g, '-');
+      el.zipFolderHint.textContent = `public/${folderName}/`;
+    });
+
+    // Handle SRT File Upload
+    el.fileSrt.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      el.srtFileName.textContent = file.name;
+      el.srtFileClear.classList.remove('hidden');
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        el.srtTextarea.value = String(ev.target?.result || '');
+        updateInputStatusUI();
+        showToast(`File ${file.name} berhasil dimuat`);
+      };
+      reader.readAsText(file);
+    });
+
+    el.srtFileClear.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      el.fileSrt.value = "";
+      el.srtFileName.textContent = "Klik untuk pilih file .srt";
+      el.srtFileClear.classList.add('hidden');
+      el.srtTextarea.value = "";
+      updateInputStatusUI();
+    });
+
+    // Handle MP3 File Upload
+    el.fileMp3.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      uploadedMp3File = file;
+      uploadedMp3MimeType = file.type || "audio/mp3";
+      el.mp3FileName.textContent = file.name;
+      el.mp3FileClear.classList.remove('hidden');
+
+      const objectUrl = URL.createObjectURL(file);
+      el.audioElement.src = objectUrl;
+      el.audioPreviewContainer.classList.remove('hidden');
+      el.audioElement.onloadedmetadata = () => {
+        el.audioDurationLabel.textContent = `${el.audioElement.duration.toFixed(1)}s`;
+      };
+
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const resultStr = String(ev.target?.result || '');
+        uploadedMp3Base64 = resultStr.split(',')[1] || null;
+        updateInputStatusUI();
+        showToast(`Audio ${file.name} siap dianalisis`);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    el.mp3FileClear.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      uploadedMp3File = null;
+      uploadedMp3Base64 = null;
+      el.fileMp3.value = "";
+      el.mp3FileName.textContent = "Klik untuk pilih .mp3 / .wav";
+      el.mp3FileClear.classList.add('hidden');
+      el.audioPreviewContainer.classList.add('hidden');
+      el.audioElement.src = "";
+      updateInputStatusUI();
+    });
+
+    el.btnCloseError.addEventListener('click', hideError);
+    el.btnProcess.addEventListener('click', runFullPipeline);
+
+    // Scrubber buttons
+    el.btnPrevScene.addEventListener('click', () => renderStagePreview(currentPreviewIndex - 1));
+    el.btnNextScene.addEventListener('click', () => renderStagePreview(currentPreviewIndex + 1));
+
+    // Manual JSON edits live-sync to validator & preview
+    el.outJsonTextarea.addEventListener('input', () => {
+      try {
+        const parsed = JSON.parse(el.outJsonTextarea.value);
+        currentScenesJson = parsed;
+        el.jsonValidBadge.textContent = "JSON Valid (Diedit)";
+        el.jsonValidBadge.className = "text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        const srtEntries = parseSrt(currentSrtString || el.srtTextarea.value);
+        if (srtEntries.length > 0) {
+          renderSelfCheckList(runSevenPointCheck(currentScenesJson, srtEntries));
+        }
+        renderStagePreview(currentPreviewIndex);
+      } catch (err) {
+        el.jsonValidBadge.textContent = "JSON Error Sintaks";
+        el.jsonValidBadge.className = "text-[11px] px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/30";
+      }
+    });
+
+    // Copy & Download Buttons
+    el.btnCopySummary.addEventListener('click', () => copyTextToClipboard(el.outSummaryText.textContent, "Ringkasan"));
+    el.btnCopySrtOut.addEventListener('click', () => copyTextToClipboard(el.outSrtCode.textContent, "voiceover.srt"));
+    el.btnDownloadSrtOut.addEventListener('click', () => {
+      const content = el.outSrtCode.textContent;
+      if (!content || content.startsWith('//')) return;
+      downloadBlob(new Blob([content], { type: 'text/plain;charset=utf-8' }), 'voiceover.srt');
+    });
+
+    el.btnFormatJson.addEventListener('click', () => {
+      if (!currentScenesJson) return;
+      isPrettyJson = !isPrettyJson;
+      el.outJsonTextarea.value = isPrettyJson
+        ? JSON.stringify(currentScenesJson, null, 2)
+        : JSON.stringify(currentScenesJson);
+    });
+
+    el.btnCopyJsonOut.addEventListener('click', () => copyTextToClipboard(el.outJsonTextarea.value, "scenes.src.json"));
+    el.btnDownloadJsonOut.addEventListener('click', () => {
+      if (!el.outJsonTextarea.value.trim()) return;
+      downloadBlob(new Blob([el.outJsonTextarea.value], { type: 'application/json;charset=utf-8' }), 'scenes.src.json');
+    });
+
+    el.btnCopyInstructions.addEventListener('click', () => copyTextToClipboard(el.outInstructionsText.textContent, "Instruksi GitHub"));
+    el.btnDownloadZip.addEventListener('click', downloadGitHubReadyZip);
+
+    // ===== Pengaturan tambahan: API key, model, sprite karakter, warna teks =====
+    (function initExtraSettings() {
+      const $ = (id) => document.getElementById(id);
+      const save = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* abaikan */ } };
+      $('cfgApiKey').value = apiKey;
+      $('cfgModelText').value = MODEL_TEXT;
+      $('cfgModelImage').value = MODEL_IMAGE;
+      $('cfgApiKey').addEventListener('input', (e) => { apiKey = e.target.value.trim(); save('gj_apikey', apiKey); });
+      $('cfgModelText').addEventListener('input', (e) => { MODEL_TEXT = e.target.value.trim() || "gemini-3-flash-preview"; save('gj_model_text', MODEL_TEXT); });
+      $('cfgModelImage').addEventListener('input', (e) => { MODEL_IMAGE = e.target.value.trim() || "gemini-3.1-flash-image"; save('gj_model_image', MODEL_IMAGE); });
+      const toggleSprite = () => $('spriteBox').classList.toggle('hidden', $('cfgCharStyle').value !== 'sprite');
+      $('cfgCharStyle').addEventListener('change', toggleSprite);
+      toggleSprite();
+      const readSprite = (file, slot, labelId) => {
+        if (!file) return;
+        const r = new FileReader();
+        r.onload = () => { charSprites[slot] = { dataUrl: r.result, fileName: file.name }; $(labelId).textContent = 'Terpilih: ' + file.name; };
+        r.readAsDataURL(file);
+      };
+      $('fileSpriteIdle').addEventListener('change', (e) => readSprite(e.target.files[0], 'idle', 'spriteIdleName'));
+      $('fileSpriteTalk').addEventListener('change', (e) => readSprite(e.target.files[0], 'talk', 'spriteTalkName'));
+      const syncText = () => { $('cfgTextColor').disabled = $('cfgTextAuto').checked; };
+      $('cfgTextAuto').addEventListener('change', syncText);
+      syncText();
+    })();
+
+    (function initImageStyle() {
+      document.querySelectorAll('.imgPreset').forEach((b) => b.addEventListener('click', () => {
+        document.getElementById('cfgArtStyle').value = b.dataset.art;
+        document.getElementById('cfgImgBg').value = b.dataset.bg;
+      }));
+      document.getElementById('btnGenChar').addEventListener('click', () => generateCharacterSprite('idle'));
+      document.getElementById('btnGenCharTalk').addEventListener('click', () => generateCharacterSprite('talk'));
+    })();
+
+    (function initThemePicker() {
+      const set = (id, v) => { const e = document.getElementById(id); if (e) e.value = v; };
+      const notes = {
+        hud: 'Tema HUD memakai latar dan warna teksnya sendiri, jadi pilihan Latar belakang dan Warna teks di bawah diabaikan. Pengaturan karakter dan aksen sudah disesuaikan (bisa diubah lagi).',
+        classic: 'Tema Klasik memakai latar bawaan (kota malam, senja, kantor, panggung, dll.) yang berganti otomatis, jadi pilihan Latar belakang dan Warna teks diabaikan. Maskot tampil besar di tengah dan caption muncul di atas.',
+        tutorial: 'Tema Tutorial memakai latar oranye + grid, tanpa maskot. Tiap adegan diberi nomor langkah (lencana "Langkah N /total"). Cocok untuk cara pakai / setup. Isi akun di bawah bila mau handle tampil di dasar layar.',
+        neon: 'Tema Neon memakai latar ungu gelap dan maskot orb bawaan (karakter dan latar diabaikan). Cocok untuk promo produk / aplikasi dengan kartu UI, angka naik, dan grafik.'
+      };
+      const apply = (v) => {
+        const note = document.getElementById('themeNote');
+        note.textContent = notes[v] || '';
+        note.classList.toggle('hidden', !notes[v]);
+        const tx = document.getElementById('tutExtra');
+        if (tx) tx.classList.toggle('hidden', v !== 'tutorial');
+        const bgCard = document.querySelector('.cfgBg') && document.querySelector('.cfgBg').closest('.setcard');
+        if (bgCard) bgCard.style.opacity = notes[v] ? '0.45' : '1';
+        if (v === 'hud') {
+          set('cfgAccent', '#22d3ee'); set('cfgAccentPicker', '#22d3ee');
+          set('cfgChar', 'robot'); set('cfgCharStyle', 'block');
+          document.querySelectorAll('.cfgTrans').forEach((c) => { c.checked = ['fade', 'zoom', 'slide-left'].includes(c.value); });
+        } else if (v === 'tutorial') {
+          set('cfgAccent', '#ff5a1f'); set('cfgAccentPicker', '#ff5a1f');
+          set('cfgChar', 'plain');
+          document.querySelectorAll('.cfgTrans').forEach((c) => { c.checked = ['fade'].includes(c.value); });
+        } else if (v === 'neon') {
+          set('cfgAccent', '#ff3f8e'); set('cfgAccentPicker', '#ff3f8e');
+          set('cfgChar', 'plain');
+          document.querySelectorAll('.cfgTrans').forEach((c) => { c.checked = ['fade', 'zoom'].includes(c.value); });
+        } else if (v === 'classic') {
+          set('cfgAccent', '#FFD700'); set('cfgAccentPicker', '#ffd700');
+          set('cfgChar', 'boss'); set('cfgCharStyle', 'stick');
+          document.querySelectorAll('.cfgTrans').forEach((c) => { c.checked = ['fade', 'slide-left', 'zoom'].includes(c.value); });
+        } else {
+          set('cfgAccent', '#e5252a'); set('cfgAccentPicker', '#e5252a'); set('cfgChar', 'boss');
+        }
+      };
+      document.querySelectorAll('input[name="cfgTheme"]').forEach((r) => r.addEventListener('change', () => apply(r.value)));
+    })();
+
+    (function initManualImages() {
+      const list = document.getElementById('manualList');
+      const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+      const opts = (arr, cur) => arr.map(([v, t]) => '<option value="' + v + '"' + (String(cur) === String(v) ? ' selected' : '') + '>' + t + '</option>').join('');
+      const render = () => {
+        if (!manualImages.length) { list.innerHTML = '<div class="hint">Belum ada gambar. Klik &quot;+ Tambah gambar&quot;.</div>'; return; }
+        list.innerHTML = manualImages.map((m, i) => `
+          <div class="rounded-xl border border-slate-700 bg-slate-900/60 p-2.5 space-y-1.5">
+            <div class="flex gap-3 items-start">
+              <img src="${m.dataUrl}" alt="" class="h-16 w-16 object-cover rounded-lg border border-slate-700" />
+              <div class="flex-1 grid grid-cols-2 gap-2 text-xs text-slate-400">
+                <label class="col-span-2">Kata pemicu (dari skrip)
+                  <input data-k="trigger" data-i="${i}" data-numpick="1" value="${esc(m.trigger)}" placeholder="mis. klik" class="w-full mt-0.5 px-2 py-1.5 rounded-lg bg-slate-950 text-xs text-white" /></label>
+                <label>Kata itu yang ke-
+                  <select data-k="nth" data-i="${i}" class="pick w-full mt-0.5 px-2 py-1.5 text-xs">${opts([[1, '1 (pertama)'], [2, '2'], [3, '3'], [4, '4']], m.nth)}</select></label>
+                <label>Tampil
+                  <select data-k="fit" data-i="${i}" class="pick w-full mt-0.5 px-2 py-1.5 text-xs">${opts([['contain', 'Utuh (screenshot)'], ['cover', 'Penuh kartu (foto)']], m.fit)}</select></label>
+                <label>Bertahan
+                  <select data-k="hold" data-i="${i}" class="pick w-full mt-0.5 px-2 py-1.5 text-xs">${opts([[0, 'Hanya adegan ini'], [1, '+1 adegan berikutnya'], [2, '+2 adegan berikutnya'], [3, '+3 adegan berikutnya']], m.hold)}</select></label>
+                <label>Keterangan (opsional)
+                  <input data-k="caption" data-i="${i}" data-numpick="1" value="${esc(m.caption)}" placeholder="maks 6 kata" class="w-full mt-0.5 px-2 py-1.5 rounded-lg bg-slate-950 text-xs text-white" /></label>
+              </div>
+              <button type="button" data-del="${i}" class="btn-rose px-2 py-1 rounded-lg text-xs">Hapus</button>
+            </div>
+            <div class="text-[11px] ${m.status && m.status.indexOf('Terpasang') === 0 ? 'text-emerald-400' : 'text-amber-300'}">${esc(m.status || '')}</div>
+          </div>`).join('');
+      };
+      window.renderManualList = render;
+      list.addEventListener('input', (e) => { const k = e.target.dataset && e.target.dataset.k; if (k) manualImages[+e.target.dataset.i][k] = e.target.value; });
+      list.addEventListener('change', (e) => { const k = e.target.dataset && e.target.dataset.k; if (k) manualImages[+e.target.dataset.i][k] = e.target.value; });
+      list.addEventListener('click', (e) => { const d = e.target.dataset && e.target.dataset.del; if (d !== undefined) { manualImages.splice(+d, 1); render(); } });
+      document.getElementById('fileManualImg').addEventListener('change', async (e) => {
+        for (const f of Array.from(e.target.files || [])) {
+          try { await addManualImageFile(f); } catch (err) { showToast('Gagal memuat ' + f.name); }
+        }
+        e.target.value = '';
+        render();
+      });
+      render();
+    })();
+
+    // sinkronkan pemilih warna aksen dengan kolom kode hex
+    (function initAccentPicker() {
+      const t = document.getElementById('cfgAccent');
+      const p = document.getElementById('cfgAccentPicker');
+      const ok = (v) => /^#[0-9a-fA-F]{6}$/.test(v);
+      p.addEventListener('input', (e) => { t.value = e.target.value; });
+      t.addEventListener('input', (e) => { const v = e.target.value.trim(); if (ok(v)) p.value = v; });
+      document.querySelectorAll('.accentSwatch').forEach((b) => b.addEventListener('click', () => { t.value = b.dataset.accent; p.value = b.dataset.accent; }));
+    })();
+
+    // Initialize UI
+    updateInputStatusUI();
+  </script>
+</body>
+</html>
