@@ -17,12 +17,12 @@ except json.JSONDecodeError as e:
     sys.exit(f'GAGAL: scenes.src.json bukan JSON valid: {e}')
 
 BG = {'dawn', 'dusk', 'room', 'stage', 'night', 'day', 'office'}
-PROP = {'bulb', 'confetti', 'crowd', 'fork', 'laptop', 'money', 'orb', 'phone', 'shadow', 'think', 'trophy'}
-POSE = {'idle', 'point', 'shock', 'sad', 'cheer', 'wave', 'walk', 'tremble', 'think'}
+PROP = {'bulb', 'confetti', 'crowd', 'fork', 'laptop', 'money', 'orb', 'phone', 'shadow', 'think', 'trophy', 'rocket', 'chart', 'lock'}
+POSE = {'idle', 'point', 'shock', 'sad', 'cheer', 'wave', 'walk', 'tremble', 'think', 'explain', 'thumbs'}
 CARD = {'list', 'stat', 'bars', 'tool'}
 CT = {'girl', 'boss', 'robot', 'block', 'sprite'}
 STYLE = {'stick', 'robot', 'block', 'sprite', 'explainer'}
-STAGE = {'window', 'compare', 'tree', 'files', 'dialog', 'callout', 'list', 'stat', 'image', 'meter', 'bars'}
+STAGE = {'window', 'compare', 'tree', 'files', 'dialog', 'callout', 'list', 'stat', 'image', 'meter', 'bars', 'terminal', 'browser', 'phone', 'chip', 'tiles', 'kpi', 'notifs', 'icons', 'profile', 'brand'}
 ROW = {'bubble', 'check', 'input', 'note', 'buttons', 'files'}
 MASCOT = {'left', 'center', 'right'}
 err, warn = [], []
@@ -103,7 +103,7 @@ for i, s in enumerate(sc):
         elif s['start'] - sc[i - 1]['start'] < 1.0: warn.append(f'adegan {i}: jarak start < 1 dtk (prepare.py akan memaksa min 0.8 dtk)')
 
 if EX:
-    if d.get('theme') not in (None, 'clean', 'hud', 'classic'): err.append(f"theme '{d.get('theme')}' tidak dikenal (clean / hud / classic)")
+    if d.get('theme') not in (None, 'clean', 'hud', 'classic', 'tutorial', 'neon'): err.append(f"theme '{d.get('theme')}' tidak dikenal (clean / hud / classic / tutorial / neon)")
     if d.get('charStyle') == 'sprite':
         for k in ('charImg', 'charTalkImg'):
             if d.get(k) and not os.path.exists(f'{D}/{d[k]}'): err.append(f"file karakter '{d[k]}' belum ada di {D}/ (upload PNG transparan ke folder itu)")
