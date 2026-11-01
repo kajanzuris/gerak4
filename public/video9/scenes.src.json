@@ -1,0 +1,229 @@
+{
+  "style": "explainer",
+  "scenes": [
+    {
+      "title": "*Kebanyakan* *orang* salah mengira kalau jualan itu soal bicara,",
+      "start": 0,
+      "small": 1,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img01.png",
+          "h": 700
+        }
+      ],
+      "bg": "night",
+      "prop": "bulb"
+    },
+    {
+      "title": "*padahal* *sebenarnya* ini soal mendengar.",
+      "start": 4.4,
+      "small": 0,
+      "pose": "explain",
+      "mascot": "left",
+      "stage": [
+        {
+          "type": "chip",
+          "title": "PADAHAL SEBENARNYA",
+          "sub": "ini soal mendengar.",
+          "icon": "👂",
+          "tone": "#3b6fd8"
+        }
+      ],
+      "bg": "room"
+    },
+    {
+      "title": "Coba *lihat* *sekelilingmu* dengan tengang,",
+      "start": 8.4,
+      "small": 0,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img02.png",
+          "h": 700
+        }
+      ],
+      "bg": "stage",
+      "prop": "crowd"
+    },
+    {
+      "title": "*tatap* *layar* ponselmu seolah itu jendela,",
+      "start": 10.5,
+      "small": 1,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img03.png",
+          "h": 700
+        }
+      ],
+      "bg": "dusk"
+    },
+    {
+      "title": "bukan *dinding* yang *menghalangi.*",
+      "start": 13.4,
+      "small": 0,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img04.png",
+          "h": 700
+        }
+      ],
+      "bg": "day",
+      "prop": "laptop"
+    },
+    {
+      "title": "Nah, *tawarkan* *solusi* kecil untuk satu orang saja,",
+      "start": 15.9,
+      "small": 1,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img05.png",
+          "h": 700
+        }
+      ],
+      "bg": "office"
+    },
+    {
+      "title": "bukan *sekedar* *teriakan* di tengah keramaian.",
+      "start": 19.4,
+      "small": 1,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img06.png",
+          "h": 700
+        }
+      ],
+      "bg": "dawn",
+      "prop": "orb"
+    },
+    {
+      "title": "*Biarkan* *penolakan* mengalir seperti air hujan,",
+      "start": 22.9,
+      "small": 1,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img07.png",
+          "h": 700
+        }
+      ],
+      "bg": "night"
+    },
+    {
+      "title": "*mendinginkan* *tanpa* merusak.",
+      "start": 25.6,
+      "small": 0,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img08.png",
+          "h": 700
+        }
+      ],
+      "bg": "room",
+      "prop": "shadow"
+    },
+    {
+      "title": "Kamu akan *sadar* *kalau* keberanian itu bukan berarti tanpa rasa",
+      "start": 27.8,
+      "small": 1,
+      "pose": "thumbs",
+      "mascot": "left",
+      "stage": [
+        {
+          "type": "compare",
+          "left": {
+            "title": "Dulu",
+            "tone": "#3b6fd8",
+            "items": [
+              "Bicara"
+            ]
+          },
+          "right": {
+            "title": "Sekarang",
+            "tone": "#1f9d8a",
+            "items": [
+              "Mendengar"
+            ]
+          }
+        }
+      ],
+      "bg": "stage"
+    },
+    {
+      "title": "*takut.*",
+      "start": 32.4,
+      "small": 0,
+      "pose": "point",
+      "mascot": "left",
+      "stage": [
+        {
+          "type": "callout",
+          "title": "takut.",
+          "sub": ""
+        }
+      ],
+      "bg": "dusk",
+      "prop": "trophy"
+    },
+    {
+      "title": "Jadi, *simpan* *pesan* ini sebagai pengingat saat rasa ragu kembali",
+      "start": 33.4,
+      "small": 1,
+      "pose": "explain",
+      "mascot": "left",
+      "stage": [
+        {
+          "type": "notifs",
+          "notifs": [
+            {
+              "text": "Catatan Penting",
+              "sub": "Jadi, simpan pesan ini",
+              "icon": "💡"
+            }
+          ]
+        }
+      ],
+      "bg": "day"
+    },
+    {
+      "title": "*mengetuk* *pintu* hatimu.",
+      "start": 38.1,
+      "small": 0,
+      "pose": "think",
+      "mascot": "left",
+      "stage": [
+        {
+          "type": "callout",
+          "title": "mengetuk pintu hatimu.",
+          "sub": ""
+        }
+      ],
+      "bg": "office",
+      "prop": "chart"
+    }
+  ],
+  "header": false,
+  "accent": "#FFD700",
+  "char": "boss",
+  "charColor": "#222222",
+  "showCta": false,
+  "charStyle": "stick",
+  "transitions": [
+    "fade",
+    "slide-left",
+    "zoom"
+  ],
+  "transitionsMode": "cycle",
+  "bgEvery": 3,
+  "theme": "classic",
+  "audio": {
+    "music": true,
+    "sfx": true,
+    "blockSfx": true
+  }
+}
