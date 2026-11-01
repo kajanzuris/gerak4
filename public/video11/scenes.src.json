@@ -1,0 +1,217 @@
+{
+  "style": "explainer",
+  "scenes": [
+    {
+      "title": "*Kebanyakan* *orang* salah mengira kalau jualan itu soal bicara,",
+      "start": 0,
+      "small": 1,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img01.png",
+          "h": 700
+        }
+      ]
+    },
+    {
+      "title": "*padahal* *sebenarnya* ini soal mendengar.",
+      "start": 4.4,
+      "small": 0,
+      "pose": "explain",
+      "mascot": "left",
+      "stage": [
+        {
+          "type": "chip",
+          "title": "PADAHAL SEBENARNYA",
+          "sub": "ini soal mendengar.",
+          "icon": "👂",
+          "tone": "#3b6fd8"
+        }
+      ]
+    },
+    {
+      "title": "Coba *lihat* *sekelilingmu* dengan tengang,",
+      "start": 8.4,
+      "small": 0,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img02.png",
+          "h": 700
+        }
+      ]
+    },
+    {
+      "title": "*tatap* *layar* ponselmu seolah itu jendela,",
+      "start": 10.5,
+      "small": 1,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img03.png",
+          "h": 700
+        }
+      ]
+    },
+    {
+      "title": "bukan *dinding* yang *menghalangi.*",
+      "start": 13.4,
+      "small": 0,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img04.png",
+          "h": 700
+        }
+      ]
+    },
+    {
+      "title": "Nah, *tawarkan* *solusi* kecil untuk satu orang saja,",
+      "start": 15.9,
+      "small": 1,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img05.png",
+          "h": 700
+        }
+      ]
+    },
+    {
+      "title": "bukan *sekedar* *teriakan* di tengah keramaian.",
+      "start": 19.4,
+      "small": 1,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img06.png",
+          "h": 700
+        }
+      ]
+    },
+    {
+      "title": "*Biarkan* *penolakan* mengalir seperti air hujan,",
+      "start": 22.9,
+      "small": 1,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img07.png",
+          "h": 700
+        }
+      ]
+    },
+    {
+      "title": "*mendinginkan* *tanpa* merusak.",
+      "start": 25.6,
+      "small": 0,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img08.png",
+          "h": 700
+        }
+      ]
+    },
+    {
+      "title": "Kamu akan *sadar* *kalau* keberanian itu bukan berarti tanpa rasa",
+      "start": 27.8,
+      "small": 1,
+      "pose": "thumbs",
+      "mascot": "left",
+      "stage": [
+        {
+          "type": "compare",
+          "left": {
+            "title": "Dulu",
+            "tone": "#3b6fd8",
+            "items": [
+              "Bicara"
+            ]
+          },
+          "right": {
+            "title": "Sekarang",
+            "tone": "#1f9d8a",
+            "items": [
+              "Mendengar"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "*takut.*",
+      "start": 32.4,
+      "small": 0,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img09.png",
+          "h": 700
+        }
+      ]
+    },
+    {
+      "title": "Jadi, *simpan* *pesan* ini sebagai pengingat saat rasa ragu kembali",
+      "start": 33.4,
+      "small": 1,
+      "pose": "explain",
+      "mascot": "left",
+      "stage": [
+        {
+          "type": "notifs",
+          "notifs": [
+            {
+              "text": "Catatan Penting",
+              "sub": "Jadi, simpan pesan ini",
+              "icon": "💡"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "*mengetuk* *pintu* hatimu.",
+      "start": 38.1,
+      "small": 0,
+      "pose": "think",
+      "mascot": "left",
+      "stage": [
+        {
+          "type": "callout",
+          "title": "mengetuk pintu hatimu.",
+          "sub": ""
+        }
+      ]
+    }
+  ],
+  "header": false,
+  "accent": "#e5252a",
+  "char": "robot",
+  "charColor": "#222222",
+  "showCta": false,
+  "charStyle": "block",
+  "transitions": [
+    "fade",
+    "slide-left",
+    "slide-up",
+    "zoom"
+  ],
+  "transitionsMode": "cycle",
+  "backgrounds": [
+    "cream",
+    "mint",
+    "sky",
+    "sunset",
+    "paper",
+    "navy"
+  ],
+  "bgMode": "auto",
+  "bgEvery": 1,
+  "theme": "clean",
+  "audio": {
+    "music": true,
+    "sfx": true,
+    "blockSfx": true
+  }
+}
