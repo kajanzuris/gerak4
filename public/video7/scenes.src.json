@@ -1,0 +1,213 @@
+{
+  "style": "explainer",
+  "scenes": [
+    {
+      "title": "*Kebanyakan* *orang* salah mengira kalau jualan itu soal bicara,",
+      "start": 0,
+      "small": 1,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img01.png",
+          "caption": "Kebanyakan orang salah mengira",
+          "h": 700
+        }
+      ]
+    },
+    {
+      "title": "*padahal* *sebenarnya* ini soal mendengar.",
+      "start": 4.4,
+      "small": 0,
+      "stage": [
+        {
+          "type": "callout",
+          "title": "padahal sebenarnya ini soal",
+          "sub": "mendengar."
+        }
+      ]
+    },
+    {
+      "title": "Coba *lihat* *sekelilingmu* dengan tengang,",
+      "start": 8.4,
+      "small": 0,
+      "stage": [
+        {
+          "type": "callout",
+          "title": "Coba lihat sekelilingmu dengan",
+          "sub": "tengang,"
+        }
+      ]
+    },
+    {
+      "title": "*tatap* *layar* ponselmu seolah itu jendela,",
+      "start": 10.5,
+      "small": 1,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img02.png",
+          "caption": "tatap layar ponselmu seolah",
+          "h": 700
+        }
+      ]
+    },
+    {
+      "title": "bukan *dinding* yang *menghalangi.*",
+      "start": 13.4,
+      "small": 0,
+      "stage": [
+        {
+          "type": "compare",
+          "left": {
+            "title": "Dulu",
+            "tone": "#3b6fd8",
+            "items": [
+              "Manual"
+            ]
+          },
+          "right": {
+            "title": "Sekarang",
+            "tone": "#1f9d8a",
+            "items": [
+              "Solusi"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "Nah, *tawarkan* *solusi* kecil untuk satu orang saja,",
+      "start": 15.9,
+      "small": 1,
+      "stage": [
+        {
+          "type": "window",
+          "title": "Rencana",
+          "tone": "#1f9d8a",
+          "rows": [
+            {
+              "k": "check",
+              "state": "done",
+              "text": "Nah, tawarkan solusi"
+            },
+            {
+              "k": "check",
+              "state": "todo",
+              "text": "kecil untuk satu"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "bukan *sekedar* *teriakan* di tengah keramaian.",
+      "start": 19.4,
+      "small": 1,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img03.png",
+          "caption": "bukan sekedar teriakan di",
+          "h": 700
+        }
+      ]
+    },
+    {
+      "title": "*Biarkan* *penolakan* mengalir seperti air hujan,",
+      "start": 22.9,
+      "small": 1,
+      "stage": [
+        {
+          "type": "callout",
+          "title": "Biarkan penolakan mengalir seperti",
+          "sub": "air hujan,"
+        }
+      ]
+    },
+    {
+      "title": "*mendinginkan* *tanpa* merusak.",
+      "start": 25.6,
+      "small": 0,
+      "stage": [
+        {
+          "type": "callout",
+          "title": "mendinginkan tanpa merusak.",
+          "sub": ""
+        }
+      ]
+    },
+    {
+      "title": "Kamu akan *sadar* *kalau* keberanian itu bukan berarti tanpa rasa",
+      "start": 27.8,
+      "small": 1,
+      "stage": [
+        {
+          "type": "image",
+          "src": "img/img04.png",
+          "caption": "Kamu akan sadar kalau",
+          "h": 700
+        }
+      ]
+    },
+    {
+      "title": "*takut.*",
+      "start": 32.4,
+      "small": 0,
+      "stage": [
+        {
+          "type": "callout",
+          "title": "takut.",
+          "sub": ""
+        }
+      ]
+    },
+    {
+      "title": "Jadi, *simpan* *pesan* ini sebagai pengingat saat rasa ragu kembali",
+      "start": 33.4,
+      "small": 1,
+      "stage": [
+        {
+          "type": "callout",
+          "title": "Jadi, simpan pesan ini",
+          "sub": "sebagai pengingat saat rasa"
+        }
+      ]
+    },
+    {
+      "title": "*mengetuk* *pintu* hatimu.",
+      "start": 38.1,
+      "small": 0,
+      "stage": [
+        {
+          "type": "callout",
+          "title": "mengetuk pintu hatimu.",
+          "sub": "NamaBrandSaya"
+        }
+      ]
+    }
+  ],
+  "header": false,
+  "accent": "#ff5a1f",
+  "charColor": "#222222",
+  "showCta": false,
+  "charStyle": "block",
+  "transitions": [
+    "fade",
+    "slide-left",
+    "slide-up",
+    "zoom",
+    "wipe"
+  ],
+  "transitionsMode": "random",
+  "backgrounds": [
+    "cream"
+  ],
+  "bgMode": "single",
+  "bgEvery": 3,
+  "theme": "tutorial",
+  "audio": {
+    "music": true,
+    "sfx": true,
+    "blockSfx": true
+  }
+}
